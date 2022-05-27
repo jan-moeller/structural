@@ -38,11 +38,27 @@ TEST_CASE("bitset")
 
     constexpr auto size = 65;
     bitset<size>   bs;
-    SECTION("after construction, all bits are unset")
+    SECTION("constructors")
     {
-        CHECK(!bs.all());
-        CHECK(!bs.any());
-        CHECK(bs.none());
+        SECTION("default constructor")
+        {
+            CHECK(!bs.all());
+            CHECK(!bs.any());
+            CHECK(bs.none());
+        }
+        SECTION("from integer")
+        {
+            CHECK(bitset<9>{0b110110101} == bitset<9>{0b110110101u});
+        }
+        SECTION("from string")
+        {
+            CHECK(bitset<9>{"110110101"} == bitset<9>{0b110110101u});
+        }
+    }
+    SECTION("literal")
+    {
+        CHECK(110110101_bits == bitset<9>{0b110110101u});
+        CHECK(1'1011'0101_bits == bitset<9>{0b110110101u});
     }
 
     SECTION("set")
@@ -107,25 +123,25 @@ TEST_CASE("bitset")
     }
     SECTION("operator&")
     {
-        CHECK((110110111_bits & 101010101_bits) == 100010101_bits);
+        CHECK((1'1011'0111_bits & 1'0101'0101_bits) == 1'0001'0101_bits);
     }
     SECTION("operator|")
     {
-        CHECK((110110111_bits | 101010101_bits) == 111110111_bits);
+        CHECK((1'1011'0111_bits | 1'0101'0101_bits) == 1'1111'0111_bits);
     }
     SECTION("operator^")
     {
-        CHECK((110110111_bits ^ 101010101_bits) == 011100010_bits);
+        CHECK((1'1011'0111_bits ^ 1'0101'0101_bits) == 0'1110'0010_bits);
     }
     SECTION("operator<<")
     {
-        CHECK((110110111_bits << 3u) == 110111000_bits);
-        CHECK((110110111001001_bits << 3u) == 110111001001000_bits);
+        CHECK((1'1011'0111_bits << 3u) == 1'1011'1000_bits);
+        CHECK((110'1101'1100'1001_bits << 3u) == 110'1110'0100'1000_bits);
     }
     SECTION("operator>>")
     {
-        CHECK((110110111_bits >> 3u) == 000110110_bits);
-        CHECK((110110111001001_bits >> 3u) == 000110110111001_bits);
+        CHECK((1'1011'0111_bits >> 3u) == 0'0011'0110_bits);
+        CHECK((110'1101'1100'1001_bits >> 3u) == 000'1101'1011'1001_bits);
     }
 
     SECTION("structural")

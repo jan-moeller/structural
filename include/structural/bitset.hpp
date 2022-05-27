@@ -25,6 +25,7 @@
 #ifndef STRUCTURAL_BITSET_HPP
 #define STRUCTURAL_BITSET_HPP
 
+#include <algorithm>
 #include <array>
 #include <ostream>
 
@@ -65,12 +66,46 @@ constexpr auto chunk_for(bitset<N>& bs, std::size_t pos) noexcept -> typename bi
 {
     return bs.chunks[chunk_index_for(bs, pos)];
 }
+
+template<std::size_t N, typename CharT, typename Traits = std::char_traits<CharT>>
+constexpr void set_from_str(bitset<N>&                            bs,
+                            std::basic_string_view<CharT, Traits> sv,
+                            CharT                                 zero = CharT('0'),
+                            CharT                                 one  = CharT('1')) noexcept
+{
+    for (unsigned i = sv.size(); i > 0u; --i)
+    {
+        if (sv[i - 1] == one)
+            bs.set(N - i, true);
+        else if (sv[i - 1] == zero)
+            bs.set(N - i, false);
+        else
+            throw std::invalid_argument{"invalid character in bitset initializer string"};
+    }
+}
 } // namespace detail
 
 template<std::size_t N>
 struct bitset
 {
     using chunk_t = std::uint8_t;
+
+    constexpr bitset() noexcept = default;
+    constexpr explicit bitset(unsigned long long val) noexcept
+    {
+        for (unsigned i = 0u; i < (sizeof(val) * CHAR_BIT); ++i)
+            if ((val >> i) & 1u)
+                set(i);
+    }
+    template<typename CharT = char, typename Traits = std::char_traits<CharT>>
+    constexpr explicit bitset(std::basic_string_view<CharT, Traits> sv, CharT zero = CharT('0'), CharT one = CharT('1'))
+    {
+        detail::set_from_str(*this, sv, zero, one);
+    }
+    constexpr explicit bitset(std::string_view sv, char zero = '0', char one = '1')
+    {
+        detail::set_from_str(*this, sv, zero, one);
+    }
 
     constexpr auto operator==(bitset const& rhs) const noexcept -> bool = default;
 
@@ -256,16 +291,21 @@ constexpr auto operator<<(std::ostream& os, bitset<N> const& bs) noexcept -> std
 }
 
 template<char... Cs>
-constexpr auto operator"" _bits() noexcept -> bitset<sizeof...(Cs)>
+constexpr auto operator"" _bits() noexcept
 {
-    constexpr std::size_t size = sizeof...(Cs);
+    constexpr std::array  str{Cs...};
+    constexpr std::size_t size = sizeof...(Cs) - std::ranges::count(str, '\'');
     bitset<size>          bs;
-    std::array            str{Cs...};
+
+    int offset = 0;
     for (std::size_t i = 0; i < str.size(); ++i)
     {
-        assert(str[i] == '0' || str[i] == '1');
-        if (str[i] == '1')
-            bs.set(size - i - 1);
+        char const c = str[str.size() - i - 1];
+        assert(c == '0' || c == '1' || c == '\'');
+        if (c == '1')
+            bs.set(i - offset);
+        if (c == '\'')
+            ++offset;
     }
     return bs;
 }
