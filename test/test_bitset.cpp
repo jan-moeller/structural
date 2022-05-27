@@ -26,8 +26,6 @@
 
 #include <bugspray/bugspray.hpp>
 
-#include <bitset>
-
 template<auto Value>
 struct test_structurality
 {
