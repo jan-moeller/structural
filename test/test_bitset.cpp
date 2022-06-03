@@ -126,6 +126,23 @@ TEST_CASE("bitset")
             CHECK(!bs.test(34));
         }
     }
+
+    SECTION("to_string", runtime) // TODO: Check at compile time once gcc supports constexpr string properly
+    {
+        CHECK((100100110_bits).to_string() == "100100110");
+        CHECK((100100110_bits).to_string(' ', 'x') == "x  x  xx ");
+    }
+    SECTION("to_ulong")
+    {
+        CHECK((100100110_bits).to_ulong() == 0b100100110);
+        CHECK((10010011011110010011001_bits).to_ulong() == 0b10010011011110010011001);
+    }
+    SECTION("to_ullong")
+    {
+        CHECK((100100110_bits).to_ullong() == 0b100100110);
+        CHECK((10010011011110010011001_bits).to_ullong() == 0b10010011011110010011001);
+    }
+
     SECTION("operator&")
     {
         CHECK((1'1011'0111_bits & 1'0101'0101_bits) == 1'0001'0101_bits);

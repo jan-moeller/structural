@@ -192,6 +192,38 @@ struct bitset
         return *this;
     }
 
+    template<class CharT = char, class Traits = std::char_traits<CharT>, class Allocator = std::allocator<CharT>>
+    [[nodiscard]] auto to_string(CharT zero = CharT('0'), CharT one = CharT('1')) const
+        -> std::basic_string<CharT, Traits, Allocator>
+    {
+        std::basic_string<CharT, Traits, Allocator> str;
+        for (std::size_t i = size(); i > 0; --i)
+            if (test(i - 1))
+                str += one;
+            else
+                str += zero;
+        return str;
+    }
+
+    [[nodiscard]] constexpr auto to_ulong() const -> unsigned long
+    {
+        if (sizeof(unsigned long) * CHAR_BIT < N)
+            throw std::overflow_error{"Bitset cannot be represented by unsigned long"};
+
+        return to_ullong();
+    }
+
+    [[nodiscard]] constexpr auto to_ullong() const -> unsigned long long
+    {
+        if (sizeof(unsigned long long) * CHAR_BIT < N)
+            throw std::overflow_error{"Bitset cannot be represented by unsigned long long"};
+
+        unsigned long long result = 0u;
+        for (std::size_t i = 0; i < chunks.size(); ++i)
+            result |= (chunks[chunks.size() - i - 1] << (i * detail::bits_per_chunk<N>));
+        return result;
+    }
+
     constexpr auto operator&=(bitset const& rhs) noexcept -> bitset&
     {
         for (std::size_t i = 0; i < chunks.size(); ++i)
@@ -289,12 +321,7 @@ constexpr auto operator^(bitset<N> const& lhs, bitset<N> const& rhs) noexcept ->
 template<std::size_t N>
 constexpr auto operator<<(std::ostream& os, bitset<N> const& bs) noexcept -> std::ostream&
 {
-    for (std::size_t i = bs.size(); i > 0; --i)
-        if (bs.test(i - 1))
-            os << '1';
-        else
-            os << '0';
-    return os;
+    return os << bs.to_string();
 }
 
 template<char... Cs>
