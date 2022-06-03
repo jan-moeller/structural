@@ -68,10 +68,8 @@ constexpr auto chunk_for(bitset<N>& bs, std::size_t pos) noexcept -> typename bi
 }
 
 template<std::size_t N, typename CharT, typename Traits = std::char_traits<CharT>>
-constexpr void set_from_str(bitset<N>&                            bs,
-                            std::basic_string_view<CharT, Traits> sv,
-                            CharT                                 zero = CharT('0'),
-                            CharT                                 one  = CharT('1')) noexcept
+constexpr void
+set_from_str(bitset<N>& bs, std::basic_string_view<CharT, Traits> sv, CharT zero = CharT('0'), CharT one = CharT('1'))
 {
     for (unsigned i = sv.size(); i > 0u; --i)
     {
