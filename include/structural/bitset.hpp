@@ -27,6 +27,8 @@
 
 #include <algorithm>
 #include <array>
+#include <bit>
+#include <numeric>
 #include <ostream>
 
 #include <cassert>
@@ -138,6 +140,13 @@ struct bitset
         return true;
     }
 
+    [[nodiscard]] constexpr auto count() const noexcept
+    {
+        return std::reduce(chunks.begin(),
+                           chunks.end(),
+                           0,
+                           [](std::size_t cur, chunk_t c) { return cur + std::popcount(c); });
+    }
     [[nodiscard]] constexpr auto size() const noexcept { return N; }
 
     [[maybe_unused]] constexpr auto set() noexcept -> bitset&

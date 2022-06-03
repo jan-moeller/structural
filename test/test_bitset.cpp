@@ -60,6 +60,11 @@ TEST_CASE("bitset")
         CHECK(110110101_bits == bitset<9>{0b110110101u});
         CHECK(1'1011'0101_bits == bitset<9>{0b110110101u});
     }
+    SECTION("count")
+    {
+        CHECK(bitset<9>{}.count() == 0);
+        CHECK((1'1011'0101_bits).count() == 6);
+    }
 
     SECTION("set")
     {
