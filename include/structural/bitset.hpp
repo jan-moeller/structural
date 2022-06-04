@@ -345,4 +345,23 @@ constexpr auto operator"" _bits() noexcept
 }
 } // namespace structural
 
+namespace std
+{
+template<std::size_t N>
+struct hash<structural::bitset<N>>
+{
+    constexpr auto operator()(structural::bitset<N> const& bs) const noexcept -> std::size_t
+    {
+        std::size_t    hash      = 0u;
+        constexpr auto max_width = sizeof(std::size_t) * CHAR_BIT;
+        for (std::size_t i = 0; i < bs.chunks.size(); ++i)
+        {
+            auto const offset = i * sizeof(typename structural::bitset<N>::chunk_t) * CHAR_BIT;
+            hash ^= std::size_t(bs.chunks[bs.chunks.size() - i - 1]) << (offset % max_width);
+        }
+        return hash;
+    }
+};
+} // namespace std
+
 #endif // STRUCTURAL_BITSET_HPP

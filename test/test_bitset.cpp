@@ -166,6 +166,17 @@ TEST_CASE("bitset")
         CHECK((110'1101'1100'1001_bits >> 3u) == 000'1101'1011'1001_bits);
     }
 
+    SECTION("std::hash")
+    {
+        CHECK(std::hash<bitset<8>>{}(0000'0000_bits) == 0b0000'0000u);
+        CHECK(std::hash<bitset<8>>{}(0000'0001_bits) == 0b0000'0001u);
+        CHECK(std::hash<bitset<8>>{}(0001'0000_bits) == 0b0001'0000u);
+        CHECK(std::hash<bitset<16>>{}(1000'0000'0001'0000_bits) == 0b1000'0000'0001'0000u);
+        CHECK(std::hash<bitset<65>>{}(
+                  1'1000'0000'0001'0000'1000'0000'0001'0000'1000'0000'0001'0000'1000'0000'0001'0000_bits)
+              == 0b1000'0000'0001'0000'1000'0000'0001'0000'1000'0000'0001'0000'1000'0000'0001'0001u);
+    }
+
     SECTION("structural")
     {
         CHECK(test_structurality<1101_bits>::value == 1101_bits);
