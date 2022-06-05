@@ -53,6 +53,10 @@ TEST_CASE("bitset")
         SECTION("from string")
         {
             CHECK(bitset<9>{"110110101"} == bitset<9>{0b110110101u});
+            SECTION("exceptions", runtime)
+            {
+                REQUIRE_THROWS_AS(std::invalid_argument, bitset<9>{"1234"});
+            }
         }
     }
     SECTION("literal")
@@ -136,11 +140,24 @@ TEST_CASE("bitset")
     {
         CHECK((100100110_bits).to_ulong() == 0b100100110);
         CHECK((10010011011110010011001_bits).to_ulong() == 0b10010011011110010011001);
+        SECTION("exceptions", runtime)
+        {
+            REQUIRE_THROWS_AS(
+                std::overflow_error,
+                (1111'0000'1111'0000'1111'0000'1111'0000'1111'0000'1111'0000'1111'0000'1111'0000'1111_bits).to_ulong());
+        }
     }
     SECTION("to_ullong")
     {
         CHECK((100100110_bits).to_ullong() == 0b100100110);
         CHECK((10010011011110010011001_bits).to_ullong() == 0b10010011011110010011001);
+        SECTION("exceptions", runtime)
+        {
+            REQUIRE_THROWS_AS(
+                std::overflow_error,
+                (1111'0000'1111'0000'1111'0000'1111'0000'1111'0000'1111'0000'1111'0000'1111'0000'1111_bits)
+                    .to_ullong());
+        }
     }
 
     SECTION("operator&")
