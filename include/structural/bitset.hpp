@@ -165,7 +165,7 @@ struct bitset
                            0,
                            [](std::size_t cur, chunk_t c) { return cur + std::popcount(c); });
     }
-    [[nodiscard]] constexpr auto size() const noexcept { return N; }
+    [[nodiscard]] static constexpr auto size() noexcept { return N; }
 
     [[maybe_unused]] constexpr auto set() noexcept -> bitset&
     {
