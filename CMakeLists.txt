@@ -26,6 +26,7 @@ project(structural)
 
 add_library(structural
         include/structural/bitset.hpp
+        include/structural/detail/split.hpp
         )
 target_include_directories(structural PUBLIC include/)
 set_target_properties(structural PROPERTIES LINKER_LANGUAGE CXX)
