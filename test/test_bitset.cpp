@@ -70,6 +70,31 @@ TEST_CASE("bitset")
         CHECK((1'1011'0101_bits).count() == 6);
     }
 
+    SECTION("test")
+    {
+        CHECK((1_bits).test(0) == true);
+        CHECK((0_bits).test(0) == false);
+
+        SECTION("test_all")
+        {
+            CHECK((101_bits).test_all(101_bits));
+            CHECK((101_bits).test_all(100_bits));
+            CHECK(!(101_bits).test_all(110_bits));
+        }
+        SECTION("test_any")
+        {
+            CHECK((101_bits).test_any(101_bits));
+            CHECK((101_bits).test_any(110_bits));
+            CHECK(!(101_bits).test_any(010_bits));
+        }
+        SECTION("test_none")
+        {
+            CHECK((101_bits).test_none(010_bits));
+            CHECK(!(101_bits).test_none(110_bits));
+            CHECK(!(101_bits).test_none(001_bits));
+        }
+    }
+
     SECTION("set")
     {
         SECTION("setting all")

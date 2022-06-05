@@ -116,6 +116,24 @@ struct bitset
         return (chunk >> n) & 1u;
     }
 
+    [[nodiscard]] constexpr auto test_all(bitset const& mask) const noexcept -> bool
+    {
+        for (std::size_t i = 0; i < chunks.size(); ++i)
+            if ((chunks[i] & mask.chunks[i]) != mask.chunks[i])
+                return false;
+        return true;
+    }
+
+    [[nodiscard]] constexpr auto test_any(bitset const& mask) const noexcept -> bool
+    {
+        for (std::size_t i = 0; i < chunks.size(); ++i)
+            if ((chunks[i] & mask.chunks[i]) != 0)
+                return true;
+        return false;
+    }
+
+    [[nodiscard]] constexpr auto test_none(bitset const& mask) const noexcept -> bool { return !test_any(mask); }
+
     [[nodiscard]] constexpr auto all() const noexcept -> bool
     {
         for (std::size_t i = 0; i < N; ++i)
