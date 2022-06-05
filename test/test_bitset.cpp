@@ -23,14 +23,9 @@
 //
 
 #include "structural/bitset.hpp"
+#include "test_structurality.hpp"
 
 #include <bugspray/bugspray.hpp>
-
-template<auto Value>
-struct test_structurality
-{
-    static constexpr auto const& value = Value;
-};
 
 TEST_CASE("bitset")
 {
