@@ -167,9 +167,8 @@ TEST_CASE("bitset")
         CHECK((10010011011110010011001_bits).to_ulong() == 0b10010011011110010011001);
         SECTION("exceptions", runtime)
         {
-            REQUIRE_THROWS_AS(
-                std::overflow_error,
-                (1111'0000'1111'0000'1111'0000'1111'0000'1111'0000'1111'0000'1111'0000'1111'0000'1111_bits).to_ulong());
+            auto const bits = 1111'0000'1111'0000'1111'0000'1111'0000'1111'0000'1111'0000'1111'0000'1111'0000'1111_bits;
+            REQUIRE_THROWS_AS(std::overflow_error, bits.to_ulong());
         }
     }
     SECTION("to_ullong")
@@ -178,10 +177,8 @@ TEST_CASE("bitset")
         CHECK((10010011011110010011001_bits).to_ullong() == 0b10010011011110010011001);
         SECTION("exceptions", runtime)
         {
-            REQUIRE_THROWS_AS(
-                std::overflow_error,
-                (1111'0000'1111'0000'1111'0000'1111'0000'1111'0000'1111'0000'1111'0000'1111'0000'1111_bits)
-                    .to_ullong());
+            auto const bits = 1111'0000'1111'0000'1111'0000'1111'0000'1111'0000'1111'0000'1111'0000'1111'0000'1111_bits;
+            REQUIRE_THROWS_AS(std::overflow_error, bits.to_ullong());
         }
     }
 
