@@ -21,8 +21,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
+#include "concept_structural_type_value.hpp"
 #include "structural/named_bitset.hpp"
-#include "test_structurality.hpp"
 
 #include <bugspray/bugspray.hpp>
 
@@ -109,7 +109,7 @@ TEST_CASE("named_bitset")
 
     SECTION("structural")
     {
-        CHECK(test_structurality<yellow | red>::value == (yellow | red));
+        CHECK(structural_value<yellow | red>);
     }
 }
 EVAL_TEST_CASE("named_bitset");

@@ -48,9 +48,9 @@ fetchcontent_declare(
 fetchcontent_makeavailable(Bugspray)
 
 add_executable(structural-tests
+        test/concept_structural_type_value.hpp
         test/test_bitset.cpp
         test/test_named_bitset.cpp
-        test/test_structurality.hpp
         )
 target_link_libraries(structural-tests PUBLIC bugspray-with-main structural)
 set_target_properties(structural-tests PROPERTIES

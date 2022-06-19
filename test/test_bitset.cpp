@@ -22,8 +22,8 @@
 // SOFTWARE.
 //
 
+#include "concept_structural_type_value.hpp"
 #include "structural/bitset.hpp"
-#include "test_structurality.hpp"
 
 #include <bugspray/bugspray.hpp>
 
@@ -213,7 +213,7 @@ TEST_CASE("bitset")
 
     SECTION("structural")
     {
-        CHECK(test_structurality<1101_bits>::value == 1101_bits);
+        CHECK(structural_value<1101_bits>);
     }
 }
 

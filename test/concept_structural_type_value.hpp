@@ -22,13 +22,26 @@
 // SOFTWARE.
 //
 
-#ifndef STRUCTURAL_TEST_STRUCTURALITY_HPP
-#define STRUCTURAL_TEST_STRUCTURALITY_HPP
+#ifndef STRUCTURAL_CONCEPT_STRUCTURAL_TYPE_VALUE_HPP
+#define STRUCTURAL_CONCEPT_STRUCTURAL_TYPE_VALUE_HPP
 
+#include <type_traits>
+
+namespace structural
+{
+namespace detail
+{
 template<auto Value>
 struct test_structurality
 {
-    static constexpr auto const& value = Value;
 };
+} // namespace detail
 
-#endif // STRUCTURAL_TEST_STRUCTURALITY_HPP
+template<typename T>
+concept structural_type = requires { typename detail::test_structurality<T{}>; };
+
+template<auto Value>
+concept structural_value = requires { typename detail::test_structurality<Value>; };
+} // namespace structural
+
+#endif // STRUCTURAL_CONCEPT_STRUCTURAL_TYPE_VALUE_HPP
