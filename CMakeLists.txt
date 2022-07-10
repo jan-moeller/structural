@@ -29,7 +29,9 @@ add_library(structural
         include/structural/detail/split.hpp
         include/structural/detail/to_underlying.hpp
         include/structural/detail/trim.hpp
+        include/structural/detail/uninitialized_array_details.hpp
         include/structural/named_bitset.hpp
+        include/structural/uninitialized_array.hpp
         )
 target_include_directories(structural PUBLIC include/)
 set_target_properties(structural PROPERTIES LINKER_LANGUAGE CXX)
@@ -51,6 +53,7 @@ add_executable(structural-tests
         test/concept_structural_type_value.hpp
         test/test_bitset.cpp
         test/test_named_bitset.cpp
+        test/test_uninitialized_array.cpp
         )
 target_link_libraries(structural-tests PUBLIC bugspray-with-main structural)
 set_target_properties(structural-tests PROPERTIES
