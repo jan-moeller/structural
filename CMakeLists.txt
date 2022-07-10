@@ -61,3 +61,4 @@ set_target_properties(structural-tests PROPERTIES
         CXX_STANDARD_REQUIRED YES
         CXX_EXTENSIONS NO
         )
+set_target_properties(structural-tests PROPERTIES COMPILE_FLAGS -fconstexpr-ops-limit=2147483648)
