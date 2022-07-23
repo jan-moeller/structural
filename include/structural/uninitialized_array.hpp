@@ -154,7 +154,7 @@ struct uninitialized_array<T, N>
     constexpr auto back() const -> const_reference { return array.back(); }
 
     constexpr auto data() noexcept -> pointer { return array.data(); }
-    constexpr auto data() const noexcept -> const_pointer { return data(); }
+    constexpr auto data() const noexcept -> const_pointer { return array.data(); }
 
     constexpr auto begin() noexcept -> iterator { return iterator{array.begin()}; }
     constexpr auto begin() const noexcept -> const_iterator { return const_iterator{array.begin()}; }
