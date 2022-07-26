@@ -25,6 +25,7 @@ cmake_minimum_required(VERSION 3.20)
 project(structural)
 
 add_library(structural
+        include/structural/basic_static_string.hpp
         include/structural/bitset.hpp
         include/structural/detail/split.hpp
         include/structural/detail/string_view_like.hpp
@@ -52,7 +53,31 @@ fetchcontent_declare(
 fetchcontent_makeavailable(Bugspray)
 
 add_executable(structural-tests
+        test/basic_static_string/test_basic_static_string_append.hpp
+        test/basic_static_string/test_basic_static_string_assign.hpp
+        test/basic_static_string/test_basic_static_string_at.hpp
+        test/basic_static_string/test_basic_static_string_c_str.hpp
+        test/basic_static_string/test_basic_static_string_clear.hpp
+        test/basic_static_string/test_basic_static_string_compare.hpp
+        test/basic_static_string/test_basic_static_string_constructors.hpp
+        test/basic_static_string/test_basic_static_string_conversion_string_view.hpp
+        test/basic_static_string/test_basic_static_string_empty_size.hpp
+        test/basic_static_string/test_basic_static_string_erase.hpp
+        test/basic_static_string/test_basic_static_string_front_back.hpp
+        test/basic_static_string/test_basic_static_string_hash.hpp
+        test/basic_static_string/test_basic_static_string_insert.hpp
+        test/basic_static_string/test_basic_static_string_iterators.hpp
+        test/basic_static_string/test_basic_static_string_operator+.hpp
+        test/basic_static_string/test_basic_static_string_operator+=.hpp
+        test/basic_static_string/test_basic_static_string_operator<=>.hpp
+        test/basic_static_string/test_basic_static_string_operator==.hpp
+        test/basic_static_string/test_basic_static_string_operator[].hpp
+        test/basic_static_string/test_basic_static_string_push_pop_back.hpp
+        test/basic_static_string/test_basic_static_string_replace.hpp
+        test/basic_static_string/test_basic_static_string_starts_with_ends_with.hpp
+        test/basic_static_string/test_basic_static_string_substr.hpp
         test/concept_structural_type_value.hpp
+        test/test_basic_static_string.cpp
         test/test_bitset.cpp
         test/test_named_bitset.cpp
         test/test_static_vector.cpp
