@@ -51,7 +51,7 @@ include(FetchContent)
 fetchcontent_declare(
         Bugspray
         GIT_REPOSITORY git@github.com:jan-moeller/bugspray.git
-        GIT_TAG dev
+        GIT_TAG v0.1.0
 )
 fetchcontent_makeavailable(Bugspray)
 
