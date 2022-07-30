@@ -35,13 +35,13 @@ namespace structural::detail
 template<std::size_t N>
 constexpr auto split(std::string_view sv, char delimiter) -> std::array<std::string_view, N>
 {
-    auto const r = sv | std::views::split(delimiter)
-                   | std::views::transform(
-                       [](auto&& in) -> std::string_view
-                       {
-                           // &*in.begin() is safe here because we know that the original string was contiguous
-                           return std::string_view{&*in.begin(), static_cast<std::size_t>(std::ranges::distance(in))};
-                       });
+    auto r = sv | std::views::split(delimiter)
+             | std::views::transform(
+                 [](auto&& in) -> std::string_view
+                 {
+                     // &*in.begin() is safe here because we know that the original string was contiguous
+                     return std::string_view{&*in.begin(), static_cast<std::size_t>(std::ranges::distance(in))};
+                 });
     std::array<std::string_view, N> results;
     std::ranges::copy(r, results.begin());
     return results;
