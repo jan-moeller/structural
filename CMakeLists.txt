@@ -28,6 +28,7 @@ add_library(structural
         include/structural/basic_static_string.hpp
         include/structural/bitset.hpp
         include/structural/detail/split.hpp
+        include/structural/detail/static_for.hpp
         include/structural/detail/string_view_like.hpp
         include/structural/detail/to_underlying.hpp
         include/structural/detail/trim.hpp
