@@ -59,16 +59,6 @@ TEST_CASE("static_vector", "[container]")
                                 test_type sv;
                                 CHECK(sv.empty());
                             }
-                            SECTION("count")
-                            {
-                                test_type sv(3);
-                                CHECK(sv.size() == 3);
-                            }
-                            SECTION("count, value")
-                            {
-                                test_type sv(3, value_type{});
-                                CHECK(sv.size() == 3);
-                            }
                             SECTION("range")
                             {
                                 test_type data{value_type{}, value_type{}, value_type{}};
@@ -123,11 +113,6 @@ TEST_CASE("static_vector", "[container]")
                         SECTION("assign")
                         {
                             test_type dest{value_type{}, value_type{}};
-                            SECTION("count, value")
-                            {
-                                dest.assign(3, value_type{});
-                                CHECK(dest.size() == 3);
-                            }
                             SECTION("initializer_list")
                             {
                                 dest.assign({value_type{}, value_type{}, value_type{}});
@@ -229,10 +214,6 @@ TEST_CASE("static_vector", "[container]")
                             REQUIRE(test_type{}.size() == 0);
                             REQUIRE(test_type{value_type{}}.size() == 1);
                         }
-                        SECTION("max_size")
-                        {
-                            REQUIRE(test_type{}.max_size() >= test_type{}.capacity());
-                        }
                         SECTION("capacity")
                         {
                             REQUIRE(test_type{}.capacity() == test_capacity);
@@ -268,20 +249,6 @@ TEST_CASE("static_vector", "[container]")
                                 REQUIRE(sv.size() == 3);
                                 sv.insert(sv.begin() + 2, value_type{});
                                 REQUIRE(sv.size() == 4);
-                            }
-                            SECTION("from n const_references")
-                            {
-                                value_type val{};
-                                sv.insert(sv.begin(), 0, val);
-                                REQUIRE(sv.size() == 0);
-                                sv.insert(sv.begin(), 2, val);
-                                REQUIRE(sv.size() == 2);
-                                sv.insert(sv.begin(), 2, val);
-                                REQUIRE(sv.size() == 4);
-                                sv.insert(sv.end(), 2, val);
-                                REQUIRE(sv.size() == 6);
-                                sv.insert(sv.begin() + 2, 2, val);
-                                REQUIRE(sv.size() == 8);
                             }
                             SECTION("from range")
                             {
@@ -381,25 +348,6 @@ TEST_CASE("static_vector", "[container]")
                             test_type sv{value_type{}, value_type{}, value_type{}};
                             sv.pop_back();
                             REQUIRE(sv.size() == 2);
-                        }
-                        SECTION("swap")
-                        {
-                            SECTION("member")
-                            {
-                                test_type sv1{value_type{}, value_type{}, value_type{}};
-                                test_type sv2{value_type{}, value_type{}};
-                                sv1.swap(sv2);
-                                REQUIRE(sv1.size() == 2);
-                                REQUIRE(sv2.size() == 3);
-                            }
-                            SECTION("free")
-                            {
-                                test_type sv1{value_type{}, value_type{}, value_type{}};
-                                test_type sv2{value_type{}, value_type{}};
-                                swap(sv1, sv2);
-                                REQUIRE(sv1.size() == 2);
-                                REQUIRE(sv2.size() == 3);
-                            }
                         }
                         SECTION("equality")
                         {

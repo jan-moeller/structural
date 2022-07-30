@@ -53,16 +53,6 @@ struct static_vector
     constexpr ~static_vector() { clear(); }
 
     constexpr static_vector() = default;
-    constexpr explicit static_vector(size_type count, const_reference value)
-    {
-        assert(count <= Capacity);
-        for (size_type i = 0; i < count; ++i)
-            push_back(value);
-    }
-    constexpr explicit static_vector(size_type count)
-        : static_vector(count, value_type{})
-    {
-    }
     template<std::input_iterator Iter, std::sentinel_for<Iter> Sentinel>
     constexpr static_vector(Iter begin, Sentinel end)
     {
@@ -103,7 +93,6 @@ struct static_vector
         return *this;
     }
 
-    constexpr void assign(size_type count, const_reference value) { *this = static_vector(count, value); }
     constexpr void assign(std::initializer_list<T> ilist) { *this = static_vector{ilist}; }
     template<std::input_iterator Iter, std::sentinel_for<Iter> Sentinel>
     constexpr void assign(Iter first, Sentinel last)
@@ -151,7 +140,6 @@ struct static_vector
 
     [[nodiscard]] constexpr auto        empty() const noexcept -> bool { return count == 0; }
     [[nodiscard]] constexpr auto        size() const noexcept -> size_type { return count; }
-    [[nodiscard]] constexpr auto        max_size() const noexcept -> size_type { return array.max_size(); }
     [[nodiscard]] constexpr static auto capacity() noexcept -> size_type { return Capacity; }
 
     constexpr void clear() noexcept
@@ -161,7 +149,7 @@ struct static_vector
         count = 0;
     }
 
-    constexpr auto insert(const_iterator pos, const_reference value) -> iterator { return insert(pos, 1, value); }
+    constexpr auto insert(const_iterator pos, const_reference value) -> iterator { return insert(pos, {value}); }
     constexpr auto insert(const_iterator pos, value_type&& value) -> iterator
     {
         assert(size() < capacity());
@@ -177,15 +165,6 @@ struct static_vector
         iterator insertion_pos = begin() + (pos - begin());
         *insertion_pos         = std::move(value);
         return insertion_pos;
-    }
-    constexpr auto insert(const_iterator pos, size_type count, const_reference value) -> iterator
-    {
-        auto middle = end();
-        for (size_type i = 0; i < count; ++i)
-            push_back(value);
-        iterator mutable_pos = begin() + (pos - begin());
-        std::ranges::rotate(mutable_pos, middle, end());
-        return mutable_pos;
     }
     template<std::input_iterator Iter, std::sentinel_for<Iter> Sentinel>
     constexpr auto insert(const_iterator pos, Iter first, Sentinel last) -> iterator
@@ -239,13 +218,6 @@ struct static_vector
 
     constexpr void pop_back() { erase(begin() + (size() - 1)); }
 
-    constexpr void swap(static_vector& other)
-    {
-        auto tmp = *this;
-        *this    = other;
-        other    = tmp;
-    }
-
     constexpr auto operator==(static_vector const& other) const -> bool
     {
         return std::ranges::equal(begin(), end(), other.begin(), other.end());
@@ -280,12 +252,6 @@ struct static_vector
     uninitialized_array<T, Capacity> array{};
     size_type                        count = 0;
 };
-
-template<typename T, std::size_t Capacity>
-constexpr void swap(static_vector<T, Capacity>& lhs, static_vector<T, Capacity>& rhs)
-{
-    lhs.swap(rhs);
-}
 
 template<typename T, std::size_t Capacity, typename U>
 constexpr auto erase(static_vector<T, Capacity>& c, U const& value) -> static_vector<T, Capacity>::size_type
