@@ -32,9 +32,11 @@ add_library(structural
         include/structural/detail/string_view_like.hpp
         include/structural/detail/to_underlying.hpp
         include/structural/detail/trim.hpp
+        include/structural/detail/tuple_impl.hpp
         include/structural/detail/uninitialized_array_details.hpp
         include/structural/named_bitset.hpp
         include/structural/static_vector.hpp
+        include/structural/tuple.hpp
         include/structural/uninitialized_array.hpp
         )
 target_include_directories(structural PUBLIC include/)
@@ -82,6 +84,7 @@ add_executable(structural-tests
         test/test_bitset.cpp
         test/test_named_bitset.cpp
         test/test_static_vector.cpp
+        test/test_tuple.cpp
         test/test_uninitialized_array.cpp
         )
 target_link_libraries(structural-tests PUBLIC bugspray-with-main structural)
