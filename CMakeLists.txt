@@ -56,34 +56,23 @@ fetchcontent_declare(
 fetchcontent_makeavailable(Bugspray)
 
 add_executable(structural-tests
-        test/basic_static_string/test_basic_static_string_append.hpp
-        test/basic_static_string/test_basic_static_string_assign.hpp
-        test/basic_static_string/test_basic_static_string_at.hpp
-        test/basic_static_string/test_basic_static_string_c_str.hpp
-        test/basic_static_string/test_basic_static_string_clear.hpp
-        test/basic_static_string/test_basic_static_string_compare.hpp
-        test/basic_static_string/test_basic_static_string_constructors.hpp
-        test/basic_static_string/test_basic_static_string_conversion_string_view.hpp
-        test/basic_static_string/test_basic_static_string_empty_size.hpp
-        test/basic_static_string/test_basic_static_string_erase.hpp
-        test/basic_static_string/test_basic_static_string_front_back.hpp
-        test/basic_static_string/test_basic_static_string_hash.hpp
-        test/basic_static_string/test_basic_static_string_insert.hpp
-        test/basic_static_string/test_basic_static_string_iterators.hpp
-        test/basic_static_string/test_basic_static_string_operator+.hpp
-        test/basic_static_string/test_basic_static_string_operator+=.hpp
-        test/basic_static_string/test_basic_static_string_operator<=>.hpp
-        test/basic_static_string/test_basic_static_string_operator==.hpp
-        test/basic_static_string/test_basic_static_string_operator[].hpp
-        test/basic_static_string/test_basic_static_string_push_pop_back.hpp
-        test/basic_static_string/test_basic_static_string_replace.hpp
-        test/basic_static_string/test_basic_static_string_starts_with_ends_with.hpp
-        test/basic_static_string/test_basic_static_string_substr.hpp
+        test/basic_static_string/basic_static_string_test_data.hpp
+        test/basic_static_string/test_basic_static_string_assignment.cpp
+        test/basic_static_string/test_basic_static_string_capacity_deduction.cpp
+        test/basic_static_string/test_basic_static_string_comparison.cpp
+        test/basic_static_string/test_basic_static_string_construction.cpp
+        test/basic_static_string/test_basic_static_string_read_access.cpp
+        test/basic_static_string/test_basic_static_string_structurality.cpp
+        test/basic_static_string/test_basic_static_string_write_access.cpp
         test/concept_structural_type_value.hpp
-        test/test_basic_static_string.cpp
+        test/static_vector/test_static_vector_assignment.cpp
+        test/static_vector/test_static_vector_comparison.cpp
+        test/static_vector/test_static_vector_construction.cpp
+        test/static_vector/test_static_vector_read_access.cpp
+        test/static_vector/test_static_vector_structurality.cpp
+        test/static_vector/test_static_vector_write_access.cpp
         test/test_bitset.cpp
         test/test_named_bitset.cpp
-        test/test_static_vector.cpp
         test/test_tuple.cpp
         test/test_uninitialized_array.cpp
         )

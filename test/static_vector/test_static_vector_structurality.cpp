@@ -21,24 +21,19 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
-
-#ifndef STRUCTURAL_TEST_BASIC_STATIC_STRING_CLEAR_HPP
-#define STRUCTURAL_TEST_BASIC_STATIC_STRING_CLEAR_HPP
+#include "../concept_structural_type_value.hpp"
+#include "structural/static_vector.hpp"
 
 #include <bugspray/bugspray.hpp>
 
-template<typename test_type>
-ASSERTING_FUNCTION(test_basic_static_string_clear,
-                   (std::basic_string_view<typename test_type::value_type> data, test_type& out))
+TEST_CASE("static_vector - structurality", "[container][static_vector]")
 {
-    using value_type = test_type::value_type;
-    SECTION("clear")
-    {
-        test_type ss(data.begin(), data.end());
-        ss.clear();
-        CHECK(ss.size() == 0);
-        out = ss;
-    }
-}
+    using namespace structural;
 
-#endif // STRUCTURAL_TEST_BASIC_STATIC_STRING_CLEAR_HPP
+    constexpr std::size_t C = 10;
+    CHECK(structural_type<static_vector<int, C>>);
+    CHECK(structural_type<static_vector<static_vector<int, C>, C>>);
+    CHECK(!structural_type<static_vector<std::string, C>>);
+    CHECK(!structural_type<static_vector<static_vector<std::string, C>, C>>);
+}
+EVAL_TEST_CASE("static_vector - structurality");

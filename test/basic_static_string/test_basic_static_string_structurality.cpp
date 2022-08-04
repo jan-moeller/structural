@@ -21,31 +21,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
-
-#ifndef STRUCTURAL_TEST_BASIC_STATIC_STRING_AT_HPP
-#define STRUCTURAL_TEST_BASIC_STATIC_STRING_AT_HPP
+#include "../concept_structural_type_value.hpp"
+#include "structural/basic_static_string.hpp"
 
 #include <bugspray/bugspray.hpp>
 
-template<typename test_type>
-ASSERTING_FUNCTION(test_basic_static_string_at, (std::basic_string_view<typename test_type::value_type> data))
+TEST_CASE("basic_static_string - structurality", "[container][static_string]")
 {
-    using value_type = test_type::value_type;
-    SECTION("at")
-    {
-        bs::static_for_each_type<test_type, test_type const>( //
-            [&]<typename T>
-            {
-                CAPTURE(bs::stringify_typename<T>());
-                T ss(data.begin(), data.end() - 1);
-                CHECK(ss.at(0) == data[0]);
-                CHECK(ss.at(1) == data[1]);
-                SECTION("out of bounds", runtime)
-                {
-                    CHECK_THROWS_AS(std::invalid_argument, ss.at(ss.size()));
-                }
-            });
-    }
-}
+    using namespace structural;
 
-#endif // STRUCTURAL_TEST_BASIC_STATIC_STRING_AT_HPP
+    constexpr std::size_t C = 10;
+    CHECK(structural_type<basic_static_string<char, C>>);
+    CHECK(structural_type<static_vector<wchar_t, C>>);
+    CHECK(structural_type<static_vector<char8_t, C>>);
+    CHECK(structural_type<static_vector<char16_t, C>>);
+    CHECK(structural_type<static_vector<char32_t, C>>);
+}
+EVAL_TEST_CASE("basic_static_string - structurality");

@@ -22,21 +22,16 @@
 // SOFTWARE.
 //
 
-#ifndef STRUCTURAL_TEST_BASIC_STATIC_STRING_HASH_HPP
-#define STRUCTURAL_TEST_BASIC_STATIC_STRING_HASH_HPP
+#ifndef STRUCTURAL_BASIC_STATIC_STRING_TEST_DATA_HPP
+#define STRUCTURAL_BASIC_STATIC_STRING_TEST_DATA_HPP
 
-#include <bugspray/bugspray.hpp>
+#include <array>
+#include <string_view>
 
-template<typename test_type>
-ASSERTING_FUNCTION(test_basic_static_string_hash, (std::basic_string_view<typename test_type::value_type> data))
-{
-    using value_type = test_type::value_type;
-    SECTION("hash", runtime)
-    {
-        test_type  ss{data};
-        auto const h = std::hash<test_type>{}(ss);
-        CHECK(h == std::hash<std::basic_string_view<typename test_type::value_type>>{}(data));
-    }
-}
+template<typename T>
+constexpr std::array<T, 5> basic_static_string_test_data{T('f'), T('o'), T('o'), T('b'), T('\0')};
 
-#endif // STRUCTURAL_TEST_BASIC_STATIC_STRING_HASH_HPP
+template<typename T>
+constexpr std::basic_string_view<T> basic_static_string_test_data_sv(basic_static_string_test_data<T>.data());
+
+#endif // STRUCTURAL_BASIC_STATIC_STRING_TEST_DATA_HPP
