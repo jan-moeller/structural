@@ -50,7 +50,7 @@ set_target_properties(structural PROPERTIES
 include(FetchContent)
 fetchcontent_declare(
         Bugspray
-        GIT_REPOSITORY git@github.com:jan-moeller/bugspray.git
+        GIT_REPOSITORY https://github.com/jan-moeller/bugspray.git
         GIT_TAG v0.1.0
 )
 fetchcontent_makeavailable(Bugspray)
