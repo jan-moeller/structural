@@ -83,3 +83,7 @@ set_target_properties(structural-tests PROPERTIES
         CXX_EXTENSIONS NO
         )
 set_target_properties(structural-tests PROPERTIES COMPILE_FLAGS -fconstexpr-ops-limit=2147483648)
+
+include(CTest)
+enable_testing()
+add_test(NAME structural-tests COMMAND structural-tests)
