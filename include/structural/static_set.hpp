@@ -143,7 +143,7 @@ struct static_set
     }
 
     template<typename K>
-    constexpr auto equal_range(K const& x) const -> tuple<const_iterator, const_iterator>
+    constexpr auto equal_range(K const& x) const -> pair<const_iterator, const_iterator>
     {
         return data.equal_range(x);
     }

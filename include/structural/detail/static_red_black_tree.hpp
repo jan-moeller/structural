@@ -25,7 +25,7 @@
 #ifndef STRUCTURAL_STATIC_RED_BLACK_TREE_HPP
 #define STRUCTURAL_STATIC_RED_BLACK_TREE_HPP
 
-#include "structural/tuple.hpp"
+#include "structural/pair.hpp"
 
 #include <algorithm>
 #include <array>
@@ -491,9 +491,9 @@ struct static_red_black_tree
         return upper_bound(x, root_idx);
     }
     template<typename K>
-    constexpr auto equal_range(K const& x) const -> tuple<const_iterator, const_iterator>
+    constexpr auto equal_range(K const& x) const -> pair<const_iterator, const_iterator>
     {
-        return tuple<const_iterator, const_iterator>{lower_bound(x), upper_bound(x)};
+        return pair<const_iterator, const_iterator>{lower_bound(x), upper_bound(x)};
     }
 
     [[nodiscard]] constexpr auto begin() const noexcept -> const_iterator
