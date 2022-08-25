@@ -36,6 +36,7 @@ add_library(structural
         include/structural/detail/tuple_impl.hpp
         include/structural/detail/uninitialized_array_details.hpp
         include/structural/named_bitset.hpp
+        include/structural/pair.hpp
         include/structural/static_set.hpp
         include/structural/static_vector.hpp
         include/structural/tuple.hpp
@@ -83,6 +84,7 @@ add_executable(structural-tests
         test/static_vector/test_static_vector_write_access.cpp
         test/test_bitset.cpp
         test/test_named_bitset.cpp
+        test/test_pair.cpp
         test/test_tuple.cpp
         test/test_uninitialized_array.cpp
         )
