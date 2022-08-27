@@ -25,7 +25,7 @@
 #ifndef STRUCTURAL_PAIR_HPP
 #define STRUCTURAL_PAIR_HPP
 
-#include "structural/detail/tuple_impl.hpp"
+#include "structural/tuple.hpp"
 
 #include <tuple>
 #include <type_traits>
@@ -37,6 +37,42 @@ struct pair
 {
     First  first;
     Second second;
+
+    constexpr pair() = default;
+    constexpr pair(First const& x, Second const& y)
+        : first(x)
+        , second(y)
+    {
+    }
+    template<typename T1 = First, typename T2 = Second>
+        requires std::is_constructible_v<First, T1> && std::is_constructible_v<Second, T2>
+    constexpr pair(T1&& x, T2&& y)
+        : first(std::forward<T1>(x))
+        , second(std::forward<T2>(y))
+    {
+    }
+    template<typename T1 = First, typename T2 = Second>
+        requires std::is_constructible_v<First, T1 const&> && std::is_constructible_v<Second, T2 const&>
+    constexpr explicit(!std::is_convertible_v<T1 const&, First> || !std::is_convertible_v<T2 const&, Second>)
+        pair(pair<T1, T2> const& p)
+        : first(p.first)
+        , second(p.second)
+    {
+    }
+    template<typename T1 = First, typename T2 = Second>
+        requires std::is_constructible_v<First, T1 const&> && std::is_constructible_v<Second, T2 const&>
+    constexpr explicit(!std::is_convertible_v<T1 const&, First> || !std::is_convertible_v<T2 const&, Second>)
+        pair(pair<T1, T2>&& p)
+        : first(std::forward<T1>(p.first))
+        , second(std::forward<T2>(p.second))
+    {
+    }
+    template<class... Args1, class... Args2>
+    pair(std::piecewise_construct_t, tuple<Args1...> first_args, tuple<Args2...> second_args)
+        : first(std::forward<Args1>(first_args)...)
+        , second(std::forward<Args2>(second_args)...)
+    {
+    }
 
     friend constexpr auto operator==(pair const& lhs, pair const& rhs) -> bool = default;
 
