@@ -66,3 +66,4 @@ TEST_CASE("static_set - insert", "[container]")
         CHECK(ss.contains(3));
     }
 }
+EVAL_TEST_CASE("static_set - insert");
