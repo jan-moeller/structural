@@ -5,12 +5,12 @@
 This repository contains [structural](https://en.cppreference.com/w/cpp/language/template_parameters) types that can be
 used as NTTP or `constexpr` variables.
 
-- static_vector<T, Capacity>
-- static_string<Capacity>
-- static_set<T, Capacity, Compare>
-- static_map<Key, Value, Capacity, Compare>
-- pair<T, U>
-- tuple<Ts...>
-- bitset
+- static_vector\<T, Capacity>
+- static_string\<Capacity>
+- static_set\<T, Capacity, Compare>
+- static_map\<Key, Value, Capacity, Compare>
+- pair\<T, U>
+- tuple\<Ts...>
+- bitset\<Size>
 
 All containers are structural as long as they are templated on structural types.
