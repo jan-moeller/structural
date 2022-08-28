@@ -44,7 +44,7 @@ struct static_set
     using const_reference        = value_type const&;
     using pointer                = value_type*;
     using const_pointer          = value_type const*;
-    using iterator               = typename detail::static_red_black_tree<Key, Capacity, Compare>::iterator;
+    using iterator               = typename detail::static_red_black_tree<Key, Capacity, Compare>::const_iterator;
     using const_iterator         = typename detail::static_red_black_tree<Key, Capacity, Compare>::const_iterator;
     using reverse_iterator       = std::reverse_iterator<iterator>;
     using const_reverse_iterator = std::reverse_iterator<const_iterator>;

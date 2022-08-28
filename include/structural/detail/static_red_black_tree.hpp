@@ -38,7 +38,7 @@
 
 namespace structural::detail
 {
-template<typename T, std::size_t Capacity, typename Compare>
+template<typename T, std::size_t Capacity, typename Compare, bool Const>
 struct static_red_black_tree_iterator;
 
 template<typename T, std::size_t Capacity, typename Compare = std::less<T>>
@@ -88,8 +88,8 @@ struct static_red_black_tree
     using const_reference        = value_type const&;
     using pointer                = value_type*;
     using const_pointer          = value_type const*;
-    using iterator               = static_red_black_tree_iterator<T, Capacity, Compare>;
-    using const_iterator         = iterator;
+    using iterator               = static_red_black_tree_iterator<T, Capacity, Compare, false>;
+    using const_iterator         = static_red_black_tree_iterator<T, Capacity, Compare, true>;
     using reverse_iterator       = std::reverse_iterator<iterator>;
     using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 
@@ -328,7 +328,7 @@ struct static_red_black_tree
     constexpr auto insert(K&&         value,
                           bool*       preexisting  = nullptr,
                           OverwriteFn overwrite_fn = OverwriteFn{},
-                          AllocateFn  allocate_fn  = AllocateFn{}) -> const_iterator
+                          AllocateFn  allocate_fn  = AllocateFn{}) -> iterator
     {
         size_t dest_idx           = s_invalid_idx;
         root_idx                  = insert<K, OverwriteFn, AllocateFn>(root_idx,
@@ -339,10 +339,10 @@ struct static_red_black_tree
                                                       allocate_fn);
         get_node(root_idx).parent = s_invalid_idx;
         get_node(root_idx).color  = color_t::black;
-        return const_iterator{this, dest_idx};
+        return iterator{this, dest_idx};
     }
     template<typename... Ks>
-    constexpr auto emplace(Ks&&... values) -> const_iterator
+    constexpr auto emplace(Ks&&... values) -> iterator
     {
         auto const new_node_idx = allocate_node(std::forward<Ks>(values)...);
         size_type  dest_idx     = s_invalid_idx;
@@ -357,7 +357,7 @@ struct static_red_black_tree
         root_idx = insert(root_idx, nodes[new_node_idx].active.payload, &dest_idx, nullptr, overwrite_fn, allocate_fn);
         get_node(root_idx).parent = s_invalid_idx;
         get_node(root_idx).color  = color_t::black;
-        return const_iterator{this, dest_idx};
+        return iterator{this, dest_idx};
     }
     template<typename K>
     constexpr auto erase(size_type idx, K&& value, size_type* erased_idx) -> size_type
@@ -410,7 +410,7 @@ struct static_red_black_tree
         return fix_up(idx);
     }
     template<typename K>
-    constexpr auto erase(K&& value) -> const_iterator
+    constexpr auto erase(K&& value) -> iterator
     {
         size_type erased_idx = s_invalid_idx;
         root_idx             = erase(root_idx, std::forward<K>(value), &erased_idx);
@@ -435,6 +435,12 @@ struct static_red_black_tree
     }
     [[nodiscard]] constexpr auto size() const noexcept -> size_type { return node_count; }
     [[nodiscard]] constexpr auto empty() const noexcept -> bool { return node_count == 0; }
+    template<typename K>
+    constexpr auto find(K const& value) -> iterator
+    {
+        auto iter = std::as_const(*this).find(value);
+        return iterator{this, iter.idx};
+    }
     template<typename K>
     constexpr auto find(K const& value) const -> const_iterator
     {
@@ -484,6 +490,12 @@ struct static_red_black_tree
         return lower_bound(x, root_idx);
     }
     template<typename K>
+    constexpr auto lower_bound(K const& x) -> iterator
+    {
+        auto iter = std::as_const(*this).lower_bound(x);
+        return iterator{this, iter.idx};
+    }
+    template<typename K>
     constexpr auto upper_bound(K const& x, size_type idx) const -> const_iterator
     {
         if (idx == s_invalid_idx)
@@ -504,9 +516,20 @@ struct static_red_black_tree
         return upper_bound(x, root_idx);
     }
     template<typename K>
+    constexpr auto upper_bound(K const& x) -> iterator
+    {
+        auto iter = std::as_const(*this).upper_bound(x);
+        return iterator{this, iter.idx};
+    }
+    template<typename K>
     constexpr auto equal_range(K const& x) const -> structural::pair<const_iterator, const_iterator>
     {
         return structural::pair<const_iterator, const_iterator>{lower_bound(x), upper_bound(x)};
+    }
+    template<typename K>
+    constexpr auto equal_range(K const& x) -> structural::pair<iterator, iterator>
+    {
+        return structural::pair<iterator, iterator>{lower_bound(x), upper_bound(x)};
     }
 
     [[nodiscard]] constexpr auto begin() const noexcept -> const_iterator
@@ -518,7 +541,13 @@ struct static_red_black_tree
             idx = get_node(idx).left;
         return const_iterator{this, idx};
     }
+    [[nodiscard]] constexpr auto begin() noexcept -> iterator
+    {
+        auto iter = std::as_const(*this).begin();
+        return iterator{this, iter.idx};
+    }
     [[nodiscard]] constexpr auto end() const noexcept -> const_iterator { return const_iterator{this, s_invalid_idx}; }
+    [[nodiscard]] constexpr auto end() noexcept -> iterator { return iterator{this, s_invalid_idx}; }
 
     friend constexpr auto operator==(static_red_black_tree const& lhs, static_red_black_tree const& rhs) -> bool
     {
@@ -532,18 +561,34 @@ struct static_red_black_tree
     size_type                    node_count         = 0;
 };
 
-template<typename T, std::size_t Capacity, typename Compare>
+template<typename T, std::size_t Capacity, typename Compare, bool Const>
 struct static_red_black_tree_iterator
 {
     using iterator_concept  = std::bidirectional_iterator_tag;
     using iterator_category = std::bidirectional_iterator_tag;
-    using value_type        = T const;
+    using value_type        = std::conditional_t<Const, T const, T>;
     using difference_type   = std::ptrdiff_t;
-    using pointer           = T const*;
-    using reference         = T const&;
+    using pointer           = value_type*;
+    using reference         = value_type&;
 
-    constexpr auto operator*() const noexcept -> T const& { return container->get_node(idx).payload; }
-    constexpr auto operator->() const noexcept -> T const* { return &**this; }
+    constexpr static_red_black_tree_iterator() = default;
+
+    constexpr static_red_black_tree_iterator(std::conditional_t<Const,
+                                                                static_red_black_tree<T, Capacity, Compare> const*,
+                                                                static_red_black_tree<T, Capacity, Compare>*> container,
+                                             typename static_red_black_tree<T, Capacity, Compare>::size_type  idx)
+        : container(container)
+        , idx(idx){};
+
+    constexpr static_red_black_tree_iterator(static_red_black_tree_iterator<T, Capacity, Compare, false> const& rhs)
+        requires(Const)
+    : container(rhs.container)
+    , idx(rhs.idx){};
+
+    constexpr static_red_black_tree_iterator(static_red_black_tree_iterator const&) = default;
+
+    constexpr auto operator*() const noexcept -> reference { return container->get_node(idx).payload; }
+    constexpr auto operator->() const noexcept -> pointer { return &**this; }
 
     constexpr auto operator++() noexcept -> static_red_black_tree_iterator&
     {
@@ -617,11 +662,23 @@ struct static_red_black_tree_iterator
         return copy;
     }
 
-    constexpr auto operator==(static_red_black_tree_iterator const&) const -> bool = default;
+    constexpr auto operator==(static_red_black_tree_iterator const& rhs) const -> bool
+    {
+        if (container && rhs.container)
+            return container == rhs.container && idx == rhs.idx;
+        if (!container && rhs.container)
+            return false;
+        if (container && !rhs.container)
+            return false;
+        return true;
+    }
 
     static constexpr auto s_invalid_idx = static_red_black_tree<T, Capacity, Compare>::s_invalid_idx;
-    static_red_black_tree<T, Capacity, Compare> const*              container;
-    typename static_red_black_tree<T, Capacity, Compare>::size_type idx;
+    std::conditional_t<Const,
+                       static_red_black_tree<T, Capacity, Compare> const*,
+                       static_red_black_tree<T, Capacity, Compare>*>
+                                                                    container = nullptr;
+    typename static_red_black_tree<T, Capacity, Compare>::size_type idx       = s_invalid_idx;
 };
 } // namespace structural::detail
 
