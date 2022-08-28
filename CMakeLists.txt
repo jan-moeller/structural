@@ -37,6 +37,7 @@ add_library(structural
         include/structural/detail/uninitialized_array_details.hpp
         include/structural/named_bitset.hpp
         include/structural/pair.hpp
+        include/structural/static_map.hpp
         include/structural/static_set.hpp
         include/structural/static_vector.hpp
         include/structural/tuple.hpp
@@ -68,6 +69,14 @@ add_executable(structural-tests
         test/basic_static_string/test_basic_static_string_structurality.cpp
         test/basic_static_string/test_basic_static_string_write_access.cpp
         test/concept_structural_type_value.hpp
+        test/static_map/test_static_map_assignment.cpp
+        test/static_map/test_static_map_constructor.cpp
+        test/static_map/test_static_map_emplace.cpp
+        test/static_map/test_static_map_erase.cpp
+        test/static_map/test_static_map_find.cpp
+        test/static_map/test_static_map_insert.cpp
+        test/static_map/test_static_map_lower_upper_bound.cpp
+        test/static_map/test_static_map_structurality.cpp
         test/static_set/test_static_set_assignment.cpp
         test/static_set/test_static_set_constructor.cpp
         test/static_set/test_static_set_emplace.cpp
