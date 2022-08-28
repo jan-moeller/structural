@@ -266,12 +266,31 @@ struct static_red_black_tree
         next_available_idx  = idx;
         --node_count;
     }
-    template<typename K>
-    constexpr auto insert(size_type idx, K&& value, size_type* dest_idx) -> size_type
+    struct default_overwrite_fn
+    {
+        constexpr void operator()(auto...) noexcept {}
+    };
+    struct default_allocate_fn
+    {
+        template<typename U>
+        constexpr auto operator()(static_red_black_tree& srbt, U&& v)
+        {
+            return srbt.allocate_node(std::forward<U>(v));
+        }
+    };
+    template<typename K, typename OverwriteFn, typename AllocateFn>
+    constexpr auto insert(size_type   idx,
+                          K&&         value,
+                          size_type*  dest_idx,
+                          bool*       preexisting,
+                          OverwriteFn overwrite_fn,
+                          AllocateFn  allocate_fn) -> size_type
     {
         if (idx == s_invalid_idx)
         {
-            *dest_idx = allocate_node(std::forward<K>(value));
+            *dest_idx = allocate_fn(*this, std::forward<K>(value));
+            if (preexisting)
+                *preexisting = false;
             return *dest_idx;
         }
 
@@ -281,67 +300,61 @@ struct static_red_black_tree
         auto const equal = !less && !cmp(n.payload, value);
         if (equal)
         {
-            n.payload = std::forward<K>(value);
+            overwrite_fn(n.payload, std::forward<K>(value));
+            if (preexisting)
+                *preexisting = true;
             *dest_idx = idx;
         }
         else if (less)
-            set_left(idx, insert(n.left, std::forward<K>(value), dest_idx));
+            set_left(idx,
+                     insert<K, OverwriteFn, AllocateFn>(n.left,
+                                                        std::forward<K>(value),
+                                                        dest_idx,
+                                                        preexisting,
+                                                        overwrite_fn,
+                                                        allocate_fn));
         else
-            set_right(idx, insert(n.right, std::forward<K>(value), dest_idx));
+            set_right(idx,
+                      insert<K, OverwriteFn, AllocateFn>(n.right,
+                                                         std::forward<K>(value),
+                                                         dest_idx,
+                                                         preexisting,
+                                                         overwrite_fn,
+                                                         allocate_fn));
 
         return fix_up(idx);
     }
-    template<typename K>
-    constexpr auto insert(K&& value) -> const_iterator
+    template<typename K, typename OverwriteFn = default_overwrite_fn, typename AllocateFn = default_allocate_fn>
+    constexpr auto insert(K&&         value,
+                          bool*       preexisting  = nullptr,
+                          OverwriteFn overwrite_fn = OverwriteFn{},
+                          AllocateFn  allocate_fn  = AllocateFn{}) -> const_iterator
     {
         size_t dest_idx           = s_invalid_idx;
-        root_idx                  = insert(root_idx, std::forward<K>(value), &dest_idx);
+        root_idx                  = insert<K, OverwriteFn, AllocateFn>(root_idx,
+                                                      std::forward<K>(value),
+                                                      &dest_idx,
+                                                      preexisting,
+                                                      overwrite_fn,
+                                                      allocate_fn);
         get_node(root_idx).parent = s_invalid_idx;
         get_node(root_idx).color  = color_t::black;
         return const_iterator{this, dest_idx};
     }
-    constexpr auto emplace(size_type idx, size_type new_node_idx, size_type* dest_idx) -> size_type
-    {
-        if (idx == s_invalid_idx)
-        {
-            *dest_idx = new_node_idx;
-            return new_node_idx;
-        }
-
-        auto& n = get_node(idx);
-
-        auto const less  = cmp(get_node(new_node_idx).payload, n.payload);
-        auto const equal = !less && !cmp(n.payload, get_node(new_node_idx).payload);
-        if (equal)
-        {
-            if (n.parent != s_invalid_idx)
-            {
-                auto& parent = get_node(n.parent);
-                if (parent.left == idx)
-                    set_left(n.parent, new_node_idx);
-                else
-                    set_right(n.parent, new_node_idx);
-            }
-            auto& new_node = get_node(new_node_idx);
-            new_node.left  = n.left;
-            new_node.right = n.right;
-            deallocate_node(idx);
-            *dest_idx = new_node_idx;
-            idx       = new_node_idx;
-        }
-        else if (less)
-            set_left(idx, emplace(n.left, new_node_idx, dest_idx));
-        else
-            set_right(idx, emplace(n.right, new_node_idx, dest_idx));
-
-        return fix_up(idx);
-    }
     template<typename... Ks>
     constexpr auto emplace(Ks&&... values) -> const_iterator
     {
-        auto const new_node_idx   = allocate_node(std::forward<Ks>(values)...);
-        size_type  dest_idx       = s_invalid_idx;
-        root_idx                  = emplace(root_idx, new_node_idx, &dest_idx);
+        auto const new_node_idx = allocate_node(std::forward<Ks>(values)...);
+        size_type  dest_idx     = s_invalid_idx;
+        auto       overwrite_fn = [&](auto&&...)
+        {
+            deallocate_node(new_node_idx);
+        };
+        auto allocate_fn = [&](auto&&...)
+        {
+            return new_node_idx;
+        };
+        root_idx = insert(root_idx, nodes[new_node_idx].active.payload, &dest_idx, nullptr, overwrite_fn, allocate_fn);
         get_node(root_idx).parent = s_invalid_idx;
         get_node(root_idx).color  = color_t::black;
         return const_iterator{this, dest_idx};
@@ -491,9 +504,9 @@ struct static_red_black_tree
         return upper_bound(x, root_idx);
     }
     template<typename K>
-    constexpr auto equal_range(K const& x) const -> pair<const_iterator, const_iterator>
+    constexpr auto equal_range(K const& x) const -> structural::pair<const_iterator, const_iterator>
     {
-        return pair<const_iterator, const_iterator>{lower_bound(x), upper_bound(x)};
+        return structural::pair<const_iterator, const_iterator>{lower_bound(x), upper_bound(x)};
     }
 
     [[nodiscard]] constexpr auto begin() const noexcept -> const_iterator
@@ -530,6 +543,7 @@ struct static_red_black_tree_iterator
     using reference         = T const&;
 
     constexpr auto operator*() const noexcept -> T const& { return container->get_node(idx).payload; }
+    constexpr auto operator->() const noexcept -> T const* { return &**this; }
 
     constexpr auto operator++() noexcept -> static_red_black_tree_iterator&
     {
