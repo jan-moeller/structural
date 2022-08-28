@@ -179,4 +179,17 @@ TEST_CASE("tuple")
         REQUIRE(i == 42);
         REQUIRE(d == 3.141);
     }
+    SECTION("make_tuple")
+    {
+        auto t = make_tuple(3, 42.4);
+        REQUIRE(get<0>(t) == 3);
+        REQUIRE(get<1>(t) == 42.4);
+    }
+    SECTION("forward_as_tuple")
+    {
+        int const i = 3;
+        auto      t = forward_as_tuple(i);
+        REQUIRE(get<0>(t) == i);
+    }
 }
+EVAL_TEST_CASE("tuple");

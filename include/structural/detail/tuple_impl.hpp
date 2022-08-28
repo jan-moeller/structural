@@ -65,6 +65,17 @@ constexpr auto synth_three_way(T&& lhs, U&& rhs)
 template<typename, typename...>
 struct tuple_impl;
 
+template<typename... Ts>
+struct is_tuple_impl
+{
+    constexpr static bool value = false;
+};
+template<typename... Ts>
+struct is_tuple_impl<tuple_impl<Ts...>>
+{
+    constexpr static bool value = true;
+};
+
 template<std::size_t... Indices, typename... Ts>
 struct tuple_impl<std::index_sequence<Indices...>, Ts...> : tuple_member<Indices, Ts>...
 {
@@ -74,14 +85,17 @@ struct tuple_impl<std::index_sequence<Indices...>, Ts...> : tuple_member<Indices
     {
     }
 
-    constexpr explicit tuple_impl(Ts&&... args)
-        requires(sizeof...(args) > 0)
-    : tuple_member<Indices, Ts>(std::move(args))...
+    constexpr explicit tuple_impl(Ts const&... args)
+        requires(sizeof...(args) > 0 && (std::is_copy_constructible_v<Ts> && ...))
+    : tuple_member<Indices, Ts>(args)...
     {
     }
 
-    constexpr explicit tuple_impl(Ts const&... args)
-        : tuple_member<Indices, Ts>(args)...
+    template<typename... Us>
+    constexpr explicit tuple_impl(Us&&... args)
+        requires(sizeof...(Ts) == sizeof...(Us) && sizeof...(Ts) > 0 && (std::is_constructible_v<Ts, Us> && ...)
+                 && (sizeof...(Ts) == 1 ? !(is_tuple_impl<std::remove_cvref_t<Us>>::value && ...) : true))
+    : tuple_member<Indices, Ts>(std::forward<Us>(args))...
     {
     }
 

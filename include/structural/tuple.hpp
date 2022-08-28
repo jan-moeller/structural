@@ -84,9 +84,15 @@ constexpr auto get(tuple<Types...> const&& t) noexcept -> T const&&
 }
 
 template<typename... Types>
-constexpr auto make_tuple(Types&&... args) -> tuple<std::unwrap_ref_decay_t<Types>...>
+constexpr auto make_tuple(Types&&... args) -> decltype(auto)
 {
     return tuple<std::unwrap_ref_decay_t<Types>...>(std::forward<Types>(args)...);
+}
+
+template<typename... Types>
+constexpr auto forward_as_tuple(Types&&... args) noexcept -> decltype(auto)
+{
+    return tuple<Types&&...>(std::forward<Types>(args)...);
 }
 } // namespace structural
 
