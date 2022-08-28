@@ -32,6 +32,13 @@
 
 namespace structural
 {
+namespace detail::pair
+{
+struct internal_tag
+{
+};
+} // namespace detail::pair
+
 template<typename First, typename Second>
 struct pair
 {
@@ -68,9 +75,22 @@ struct pair
     {
     }
     template<class... Args1, class... Args2>
-    pair(std::piecewise_construct_t, tuple<Args1...> first_args, tuple<Args2...> second_args)
-        : first(std::forward<Args1>(first_args)...)
-        , second(std::forward<Args2>(second_args)...)
+    constexpr pair(std::piecewise_construct_t, tuple<Args1...>&& first_args, tuple<Args2...>&& second_args)
+        : pair(detail::pair::internal_tag{},
+               std::move(first_args),
+               std::move(second_args),
+               std::make_index_sequence<sizeof...(Args1)>(),
+               std::make_index_sequence<sizeof...(Args2)>())
+    {
+    }
+    template<class Tuple1, class Tuple2, std::size_t... Is, std::size_t... Js>
+    constexpr pair(detail::pair::internal_tag,
+                   Tuple1&& tuple1,
+                   Tuple2&& tuple2,
+                   std::index_sequence<Is...>,
+                   std::index_sequence<Js...>)
+        : first(get<Is>(std::forward<Tuple1>(tuple1))...)
+        , second(get<Js>(std::forward<Tuple2>(tuple2))...)
     {
     }
 
