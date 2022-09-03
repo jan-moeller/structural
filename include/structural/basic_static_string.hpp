@@ -166,13 +166,13 @@ struct basic_static_string
     constexpr auto at(size_type pos) -> reference
     {
         if (pos >= size())
-            throw std::invalid_argument{"basic_static_string::at"};
+            throw std::out_of_range{"basic_static_string::at"};
         return storage.at(pos);
     }
     constexpr auto at(size_type pos) const -> const_reference
     {
         if (pos >= size())
-            throw std::invalid_argument{"basic_static_string::at"};
+            throw std::out_of_range{"basic_static_string::at"};
         return storage.at(pos);
     }
 

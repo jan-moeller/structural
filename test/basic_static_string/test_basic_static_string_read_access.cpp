@@ -50,7 +50,7 @@ TEST_CASE("basic_static_string - read access", "[container][static_string]")
                             CHECK(ss.at(1) == data[1]);
                             SECTION("out of bounds", runtime)
                             {
-                                CHECK_THROWS_AS(std::invalid_argument, ss.at(ss.size()));
+                                CHECK_THROWS_AS(std::out_of_range, ss.at(ss.size()));
                             }
                         });
                 }
