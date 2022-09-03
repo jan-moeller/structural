@@ -21,7 +21,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
-#include "structural/basic_static_string.hpp"
+#include "structural/static_string.hpp"
 
 #include <bugspray/bugspray.hpp>
 

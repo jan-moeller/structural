@@ -511,17 +511,6 @@ auto operator<<(std::basic_ostream<CharT, Traits>& os, basic_static_string<CharT
 {
     return os << std::basic_string_view<CharT, Traits>(str);
 }
-
-template<std::size_t Capacity>
-using static_string = basic_static_string<char, Capacity>;
-template<std::size_t Capacity>
-using static_wstring = basic_static_string<wchar_t, Capacity>;
-template<std::size_t Capacity>
-using static_u8string = basic_static_string<char8_t, Capacity>;
-template<std::size_t Capacity>
-using static_u16string = basic_static_string<char16_t, Capacity>;
-template<std::size_t Capacity>
-using static_u32string = basic_static_string<char32_t, Capacity>;
 } // namespace structural
 
 namespace std

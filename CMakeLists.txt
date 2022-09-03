@@ -39,6 +39,7 @@ add_library(structural
         include/structural/pair.hpp
         include/structural/static_map.hpp
         include/structural/static_set.hpp
+        include/structural/static_string.hpp
         include/structural/static_vector.hpp
         include/structural/tuple.hpp
         include/structural/uninitialized_array.hpp
