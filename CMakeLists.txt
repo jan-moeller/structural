@@ -27,6 +27,7 @@ project(structural)
 add_library(structural
         include/structural/basic_static_string.hpp
         include/structural/bitset.hpp
+        include/structural/detail/hash_combine.hpp
         include/structural/detail/split.hpp
         include/structural/detail/static_for.hpp
         include/structural/detail/static_red_black_tree.hpp
@@ -35,6 +36,7 @@ add_library(structural
         include/structural/detail/trim.hpp
         include/structural/detail/tuple_impl.hpp
         include/structural/detail/uninitialized_array_details.hpp
+        include/structural/hash.hpp
         include/structural/named_bitset.hpp
         include/structural/pair.hpp
         include/structural/static_map.hpp
@@ -93,6 +95,7 @@ add_executable(structural-tests
         test/static_vector/test_static_vector_structurality.cpp
         test/static_vector/test_static_vector_write_access.cpp
         test/test_bitset.cpp
+        test/test_hash.cpp
         test/test_named_bitset.cpp
         test/test_pair.cpp
         test/test_tuple.cpp
