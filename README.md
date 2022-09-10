@@ -9,6 +9,7 @@ used as NTTP or `constexpr` variables.
 - static_string\<Capacity>
 - static_set\<T, Capacity, Compare>
 - static_map\<Key, Value, Capacity, Compare>
+- static_unordered_set\<T, Capacity, Hash, Equals>
 - pair\<T, U>
 - tuple\<Ts...>
 - bitset\<Size>

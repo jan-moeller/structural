@@ -30,6 +30,7 @@ add_library(structural
         include/structural/detail/hash_combine.hpp
         include/structural/detail/split.hpp
         include/structural/detail/static_for.hpp
+        include/structural/detail/static_hash_table.hpp
         include/structural/detail/static_red_black_tree.hpp
         include/structural/detail/string_view_like.hpp
         include/structural/detail/to_underlying.hpp
@@ -42,6 +43,7 @@ add_library(structural
         include/structural/static_map.hpp
         include/structural/static_set.hpp
         include/structural/static_string.hpp
+        include/structural/static_unordered_set.hpp
         include/structural/static_vector.hpp
         include/structural/tuple.hpp
         include/structural/uninitialized_array.hpp
@@ -88,6 +90,13 @@ add_executable(structural-tests
         test/static_set/test_static_set_insert.cpp
         test/static_set/test_static_set_lower_upper_bound.cpp
         test/static_set/test_static_set_structurality.cpp
+        test/static_unordered_set/test_static_unordered_set_assignment.cpp
+        test/static_unordered_set/test_static_unordered_set_constructor.cpp
+        test/static_unordered_set/test_static_unordered_set_emplace.cpp
+        test/static_unordered_set/test_static_unordered_set_erase.cpp
+        test/static_unordered_set/test_static_unordered_set_find.cpp
+        test/static_unordered_set/test_static_unordered_set_insert.cpp
+        test/static_unordered_set/test_static_unordered_set_structurality.cpp
         test/static_vector/test_static_vector_assignment.cpp
         test/static_vector/test_static_vector_comparison.cpp
         test/static_vector/test_static_vector_construction.cpp
