@@ -209,6 +209,7 @@ struct static_unordered_set
     /// # Notes
     /// Invalidates all iterators, pointers or references to the erased element.
     template<typename K>
+        requires(!(std::convertible_to<K, iterator> || std::convertible_to<K, const_iterator>))
     constexpr auto erase(K&& x) -> size_type
     {
         auto const iter = data.find(std::forward<K>(x));
