@@ -10,6 +10,7 @@ used as NTTP or `constexpr` variables.
 - static_set\<T, Capacity, Compare>
 - static_map\<Key, Value, Capacity, Compare>
 - static_unordered_set\<T, Capacity, Hash, Equals>
+- static_unordered_map\<Key, T, Capacity, Hash, Equals>
 - pair\<T, U>
 - tuple\<Ts...>
 - bitset\<Size>
