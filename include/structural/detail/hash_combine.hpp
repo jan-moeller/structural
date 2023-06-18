@@ -38,7 +38,7 @@ constexpr auto hash_combine(std::size_t first, Ts... ts) noexcept -> std::size_t
         return first;
     else
     {
-        std::size_t result = first ^ hash_combine(ts...) + 0x9e3779b9 + (first << 6) + (first >> 2);
+        std::size_t result = first ^ (hash_combine(ts...) + 0x9e3779b9 + (first << 6) + (first >> 2));
         return result;
     }
 }
