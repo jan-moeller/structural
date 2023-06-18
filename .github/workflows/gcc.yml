@@ -1,10 +1,10 @@
-name: GCC
+name: gcc
 
 on:
   push:
-    branches: [ main, dev ]
+    branches: [ main ]
   pull_request:
-    branches: [ main, dev ]
+    branches: [ main ]
 
 jobs:
   build:
@@ -15,32 +15,33 @@ jobs:
         compiler:
           - g++-11
           - g++-12
+          - g++-13
         build_type: [ Debug, Release ]
-        dont_use_std_vector: [ ON, OFF ]
-        dont_use_std_string: [ ON, OFF ]
-        exclude:
+        include:
           # gcc-11 doesn't support constexpr vector and string, so there is no point in attempting to build with it
           - compiler: g++-11
-            dont_use_std_vector: OFF
-          - compiler: g++-11
-            dont_use_std_string: OFF
+            required_pkgs: g++-11
+            dont_use_std_vector: ON
+            dont_use_std_string: ON
           # gcc-12's constexpr string implementation has bugs: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=105440
           - compiler: g++-12
-            dont_use_std_string: OFF
-        include:
-          - compiler: g++-11
-            required_pkgs: g++-11
-          - compiler: g++-12
             required_pkgs: g++-12
+            dont_use_std_string: ON
+          # gcc-13's constexpr string implementation has bugs: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=105440
+          - compiler: g++-13
+            required_pkgs: g++-13
+            dont_use_std_string: ON
 
     steps:
       - uses: actions/checkout@v3
 
       - name: Setup environment
-        run: sudo apt-get install -y ${{matrix.required_pkgs}}
+        run: sudo add-apt-repository ppa:ubuntu-toolchain-r/ppa &&
+          sudo apt update &&
+          sudo apt-get install -y ${{matrix.required_pkgs}}
 
       - name: Configure CMake
-        run: cmake -B ${{github.workspace}}/build
+        run: cmake -S test/ -B ${{github.workspace}}/build
           -D CMAKE_BUILD_TYPE=${{matrix.build_type}}
           -D BUGSPRAY_DONT_USE_STD_VECTOR=${{matrix.dont_use_std_vector}}
           -D BUGSPRAY_DONT_USE_STD_STRING=${{matrix.dont_use_std_string}}
@@ -51,5 +52,5 @@ jobs:
 
       - name: Test
         working-directory: ${{github.workspace}}/build
-        run: ctest -C ${{matrix.build_type}} --output-on-failure
+        run: ctest -C ${{matrix.build_type}} --test-dir ${{github.workspace}}/build --output-on-failure
       
