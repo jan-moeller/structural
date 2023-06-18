@@ -467,7 +467,7 @@ struct basic_static_string
     constexpr auto insert(const_iterator pos, detail::string_view_like<CharT, Traits> auto const& t) -> iterator
     {
         std::basic_string_view<CharT, Traits> sv = t;
-        return insert(pos, t.begin(), t.end());
+        return insert(pos, sv.begin(), sv.end());
     }
 
     /// Inserts the characters specified by two iterators at the specified position
