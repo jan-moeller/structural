@@ -72,7 +72,7 @@
             return names;                                                                                              \
         }();                                                                                                           \
         auto const idx = structural::detail::to_underlying(e);                                                         \
-        assert(idx < names.size());                                                                                    \
+        assert(std::size_t(idx) < names.size());                                                                                    \
         return names[idx];                                                                                             \
     }                                                                                                                  \
     auto to_string(enum_name e)->std::string                                                                           \

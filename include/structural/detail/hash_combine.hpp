@@ -46,7 +46,7 @@ constexpr auto hash_combine(std::size_t first, Ts... ts) noexcept -> std::size_t
 constexpr auto hash_bytes(std::byte const* ptr, std::size_t n) noexcept -> std::size_t
 {
     std::size_t result = 0;
-    int         shift  = 0;
+    unsigned    shift  = 0;
     for (; shift < sizeof(std::size_t) && shift < n; ++shift)
         result &= static_cast<std::size_t>(ptr[shift]) << (shift * sizeof(std::byte));
     if (shift < n)
