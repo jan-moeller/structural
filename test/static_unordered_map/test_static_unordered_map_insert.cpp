@@ -104,7 +104,6 @@ TEST_CASE("static_unordered_map - insert", "[container]")
             }
             auto const       size  = sm.size();
             int              key   = data.front().first;
-            std::string_view value = data.front().second;
             sm.insert_or_assign(std::move(key), "foobar");
             CHECK(size == sm.size());
             CHECK(sm.find(data.front())->second == "foobar");
@@ -122,7 +121,6 @@ TEST_CASE("static_unordered_map - insert", "[container]")
             }
             auto const       size  = sm.size();
             int              key   = data.front().first;
-            std::string_view value = data.front().second;
             sm[key]                = "foobar";
             CHECK(size == sm.size());
             CHECK(sm.find(data.front())->second == "foobar");
