@@ -25,13 +25,14 @@
 #ifndef STRUCTURAL_BITSET_HPP
 #define STRUCTURAL_BITSET_HPP
 
+#include <ctrx/contracts.hpp>
+
 #include <algorithm>
 #include <array>
 #include <bit>
 #include <numeric>
 #include <ostream>
 
-#include <cassert>
 #include <climits>
 #include <cstddef>
 #include <cstdint>
@@ -52,8 +53,8 @@ constexpr std::size_t chunk_size = 1 + ((N - 1) / bits_per_chunk<N>);
 template<std::size_t N>
 constexpr auto chunk_index_for(bitset<N> const& bs, std::size_t pos) noexcept -> std::size_t
 {
-    assert(pos < N);
-    assert(N > 0);
+    CTRX_PRECONDITION(pos < N);
+    CTRX_PRECONDITION(N > 0);
     return bs.chunks.size() - pos / bits_per_chunk<N> - 1;
 }
 
@@ -353,7 +354,7 @@ constexpr auto operator"" _bits() noexcept
     for (std::size_t i = 0; i < str.size(); ++i)
     {
         char const c = str[str.size() - i - 1];
-        assert(c == '0' || c == '1' || c == '\'');
+        CTRX_ASSERT(c == '0' || c == '1' || c == '\'');
         if (c == '1')
             bs.set(i - offset);
         if (c == '\'')

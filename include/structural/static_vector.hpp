@@ -27,10 +27,11 @@
 
 #include "structural/uninitialized_array.hpp"
 
+#include <ctrx/contracts.hpp>
+
 #include <algorithm>
 #include <compare>
 
-#include <cassert>
 #include <cstddef>
 
 namespace structural
@@ -152,7 +153,7 @@ struct static_vector
     constexpr auto insert(const_iterator pos, const_reference value) -> iterator { return insert(pos, {value}); }
     constexpr auto insert(const_iterator pos, value_type&& value) -> iterator
     {
-        assert(size() < capacity());
+        CTRX_PRECONDITION(size() < capacity());
         if (pos == end())
         {
             push_back(std::move(value));
@@ -210,7 +211,7 @@ struct static_vector
     template<typename... Args>
     constexpr auto emplace_back(Args&&... args) -> reference
     {
-        assert(size() < capacity());
+        CTRX_PRECONDITION(size() < capacity());
         array.construct_at(end(), std::forward<Args>(args)...);
         ++count;
         return back();
@@ -223,9 +224,9 @@ struct static_vector
         return std::ranges::equal(begin(), end(), other.begin(), other.end());
     }
     constexpr auto operator<=>(static_vector const& rhs) const -> decltype(auto)
-        requires(std::three_way_comparable_with<value_type const, value_type const>
-                 || (requires(value_type const e) { e < e; }
-                     && std::convertible_to<decltype(std::declval<value_type>() < std::declval<value_type>()), bool>))
+        requires(std::three_way_comparable_with<value_type const, value_type const> || (requires(value_type const e) {
+                     e < e;
+                 } && std::convertible_to<decltype(std::declval<value_type>() < std::declval<value_type>()), bool>))
     {
         return std::lexicographical_compare_three_way(
             begin(),

@@ -27,13 +27,14 @@
 
 #include "structural/pair.hpp"
 
+#include <ctrx/contracts.hpp>
+
 #include <algorithm>
 #include <array>
 #include <functional>
 #include <limits>
 #include <memory>
 
-#include <cassert>
 #include <cstdint>
 
 namespace structural::detail
@@ -148,12 +149,12 @@ struct static_red_black_tree
 
     constexpr auto get_node(size_type idx) noexcept -> active_node_t&
     {
-        assert(idx != s_invalid_idx);
+        CTRX_PRECONDITION(idx != s_invalid_idx);
         return nodes[idx].active;
     }
     constexpr auto get_node(size_type idx) const noexcept -> active_node_t const&
     {
-        assert(idx != s_invalid_idx);
+        CTRX_PRECONDITION(idx != s_invalid_idx);
         return nodes[idx].active;
     }
     constexpr void set_left(size_type idx, size_type node) noexcept
@@ -251,7 +252,7 @@ struct static_red_black_tree
     template<typename... Ks>
     constexpr auto allocate_node(Ks&&... values) -> size_type
     {
-        assert(next_available_idx < Capacity);
+        CTRX_PRECONDITION(next_available_idx < Capacity);
         size_type const idx = next_available_idx;
         next_available_idx  = nodes[idx].inactive.next_free_idx;
         std::construct_at(&nodes[idx].active, std::forward<Ks>(values)...);
@@ -260,7 +261,7 @@ struct static_red_black_tree
     }
     constexpr void deallocate_node(size_type idx)
     {
-        assert(idx != s_invalid_idx);
+        CTRX_PRECONDITION(idx != s_invalid_idx);
         std::destroy_at(&nodes[idx].active);
         nodes[idx].inactive = inactive_node_t{.next_free_idx = next_available_idx};
         next_available_idx  = idx;
@@ -375,7 +376,7 @@ struct static_red_black_tree
                 idx = rotate_right(idx);
             if (!cmp(get_node(idx).payload, value) && get_node(idx).right == s_invalid_idx)
             {
-                assert(get_node(idx).left == s_invalid_idx);
+                CTRX_ASSERT(get_node(idx).left == s_invalid_idx);
                 *erased_idx = idx;
                 return s_invalid_idx;
             }
@@ -582,8 +583,8 @@ struct static_red_black_tree_iterator
 
     constexpr static_red_black_tree_iterator(static_red_black_tree_iterator<T, Capacity, Compare, false> const& rhs)
         requires(Const)
-    : container(rhs.container)
-    , idx(rhs.idx){};
+        : container(rhs.container)
+        , idx(rhs.idx){};
 
     constexpr static_red_black_tree_iterator(static_red_black_tree_iterator const&) = default;
 

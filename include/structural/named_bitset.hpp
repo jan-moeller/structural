@@ -30,6 +30,8 @@
 #include "structural/detail/to_underlying.hpp"
 #include "structural/detail/trim.hpp"
 
+#include <ctrx/contracts.hpp>
+
 #include <ranges>
 #include <string>
 #include <string_view>
@@ -61,7 +63,7 @@
     STRUCTURAL_MAKE_NAMED_BITSET_IMPL_GEN_OP(|, enum_name, bitset_name)                                                \
     STRUCTURAL_MAKE_NAMED_BITSET_IMPL_GEN_OP(^, enum_name, bitset_name)                                                \
                                                                                                                        \
-    constexpr auto to_string_view(enum_name e)->std::string_view                                                       \
+    constexpr auto to_string_view(enum_name e) -> std::string_view                                                     \
     {                                                                                                                  \
         constexpr auto names = []()                                                                                    \
         {                                                                                                              \
@@ -72,10 +74,10 @@
             return names;                                                                                              \
         }();                                                                                                           \
         auto const idx = structural::detail::to_underlying(e);                                                         \
-        assert(std::size_t(idx) < names.size());                                                                                    \
+        CTRX_ASSERT(std::size_t(idx) < names.size());                                                                       \
         return names[idx];                                                                                             \
     }                                                                                                                  \
-    auto to_string(enum_name e)->std::string                                                                           \
+    auto to_string(enum_name e) -> std::string                                                                         \
     {                                                                                                                  \
         return std::string{to_string_view(e)};                                                                         \
     } // TODO: Make constexpr as soon as std lib supports constexpr std::string

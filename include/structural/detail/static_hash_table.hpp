@@ -28,12 +28,13 @@
 #include "structural/hash.hpp"
 #include "structural/pair.hpp"
 
+#include <ctrx/contracts.hpp>
+
 #include <algorithm>
 #include <array>
 #include <functional>
 #include <utility>
 
-#include <cassert>
 #include <cstddef>
 
 namespace structural::detail
@@ -158,7 +159,7 @@ struct static_hash_table
     template<typename... Ks>
     constexpr auto allocate_node(Ks&&... values) -> size_type
     {
-        assert(next_available_idx < Capacity);
+        CTRX_PRECONDITION(next_available_idx < Capacity);
         size_type const idx = next_available_idx;
         next_available_idx  = nodes[idx].inactive.next_free_idx;
         std::construct_at(&nodes[idx].active, std::forward<Ks>(values)...);
@@ -168,7 +169,7 @@ struct static_hash_table
 
     constexpr void deallocate_node(size_type idx)
     {
-        assert(idx != s_invalid_idx);
+        CTRX_PRECONDITION(idx != s_invalid_idx);
         std::destroy_at(&nodes[idx].active);
         nodes[idx].inactive = inactive_node_t{.next_free_idx = next_available_idx};
         next_available_idx  = idx;
@@ -177,12 +178,12 @@ struct static_hash_table
 
     constexpr auto get_node(size_type idx) noexcept -> active_node_t&
     {
-        assert(idx != s_invalid_idx);
+        CTRX_PRECONDITION(idx != s_invalid_idx);
         return nodes[idx].active;
     }
     constexpr auto get_node(size_type idx) const noexcept -> active_node_t const&
     {
-        assert(idx != s_invalid_idx);
+        CTRX_PRECONDITION(idx != s_invalid_idx);
         return nodes[idx].active;
     }
 
@@ -229,7 +230,7 @@ struct static_hash_table
     template<typename... Args>
     constexpr auto emplace(Args&&... args) -> structural::pair<iterator, bool>
     {
-        assert(node_count < Capacity);
+        CTRX_PRECONDITION(node_count < Capacity);
         auto const  new_idx      = allocate_node(std::forward<Args>(args)...);
         auto const& new_node     = get_node(new_idx).payload;
         auto const  h            = hash_fn(new_node);
@@ -272,7 +273,7 @@ struct static_hash_table
         for (; n != s_invalid_idx && get_node(n).next != node_idx; n = get_node(n).next)
         {
         }
-        assert(get_node(n).next == node_idx);
+        CTRX_ASSERT(get_node(n).next == node_idx);
         get_node(n).next = get_node(get_node(n).next).next;
         deallocate_node(node_idx);
         return iterator{this, pos.idx, pos.node_idx};
@@ -364,9 +365,9 @@ struct static_hash_table_iterator
 
     constexpr static_hash_table_iterator(static_hash_table_iterator<T, Capacity, Hash, Equal, false> const& rhs)
         requires(Const)
-    : container(rhs.container)
-    , idx(rhs.idx)
-    , node_idx(rhs.node_idx){};
+        : container(rhs.container)
+        , idx(rhs.idx)
+        , node_idx(rhs.node_idx){};
 
     constexpr static_hash_table_iterator(static_hash_table_iterator const&) = default;
 
@@ -375,7 +376,7 @@ struct static_hash_table_iterator
 
     constexpr auto operator++() noexcept -> static_hash_table_iterator&
     {
-        assert(idx != s_invalid_idx);
+        CTRX_PRECONDITION(idx != s_invalid_idx);
         if (container->get_node(node_idx).next != s_invalid_idx)
         {
             node_idx = container->get_node(node_idx).next;
