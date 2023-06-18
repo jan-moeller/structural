@@ -32,9 +32,9 @@ TEST_CASE("basic_static_string - structurality", "[container][static_string]")
 
     constexpr std::size_t C = 10;
     CHECK(structural_type<basic_static_string<char, C>>);
-    CHECK(structural_type<static_vector<wchar_t, C>>);
-    CHECK(structural_type<static_vector<char8_t, C>>);
-    CHECK(structural_type<static_vector<char16_t, C>>);
-    CHECK(structural_type<static_vector<char32_t, C>>);
+    CHECK(structural_type<basic_static_string<wchar_t, C>>);
+    CHECK(structural_type<basic_static_string<char8_t, C>>);
+    CHECK(structural_type<basic_static_string<char16_t, C>>);
+    CHECK(structural_type<basic_static_string<char32_t, C>>);
 }
 EVAL_TEST_CASE("basic_static_string - structurality");
