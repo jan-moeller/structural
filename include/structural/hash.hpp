@@ -70,7 +70,7 @@ struct hash<T>
 template<>
 struct hash<nullptr_t>
 {
-    constexpr auto operator()(nullptr_t const& value) const noexcept -> std::size_t { return 0; }
+    constexpr auto operator()(nullptr_t const& /*value*/) const noexcept -> std::size_t { return 0; }
 };
 
 template<typename T>
@@ -125,7 +125,7 @@ struct hash<std::variant<Ts...>>
 template<>
 struct hash<std::monostate>
 {
-    constexpr auto operator()(std::monostate const& value) const noexcept -> std::size_t { return 0; }
+    constexpr auto operator()(std::monostate const& /*value*/) const noexcept -> std::size_t { return 0; }
 };
 
 template<std::size_t N>

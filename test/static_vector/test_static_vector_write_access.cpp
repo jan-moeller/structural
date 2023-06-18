@@ -165,7 +165,7 @@ TEST_CASE("static_vector - write access", "[container][static_vector]")
                                 SECTION("predicate")
                                 {
                                     REQUIRE(erase_if(sv,
-                                                     [n = 0](value_type const& e) mutable
+                                                     [n = 0](value_type const& /*e*/) mutable
                                                      {
                                                          ++n;
                                                          return n < 3;

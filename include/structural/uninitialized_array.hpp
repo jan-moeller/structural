@@ -188,7 +188,7 @@ struct uninitialized_array<T, N>
     }
 
     constexpr void destroy_at(size_type pos) { destroy_at(begin() + pos); }
-    constexpr void destroy_at(const_iterator pos) {}
+    constexpr void destroy_at(const_iterator /*pos*/) {}
 
     std::array<value_type, N> array{};
 };
