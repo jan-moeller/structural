@@ -378,7 +378,7 @@ struct basic_static_string
     constexpr auto length() const noexcept -> size_type { return size(); }
 
     /// Returns `Capacity`
-    constexpr auto capacity() const noexcept -> size_type { return Capacity; }
+    static constexpr auto capacity() noexcept -> size_type { return Capacity; }
 
     /// Removes all characters from this string
     ///
