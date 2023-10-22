@@ -5,12 +5,12 @@
 This repository contains [structural](https://en.cppreference.com/w/cpp/language/template_parameters) types that can be
 used as NTTP or `constexpr` variables.
 
-- static_vector\<T, Capacity>
-- static_string\<Capacity>
-- static_set\<T, Capacity, Compare>
-- static_map\<Key, Value, Capacity, Compare>
-- static_unordered_set\<T, Capacity, Hash, Equals>
-- static_unordered_map\<Key, T, Capacity, Hash, Equals>
+- inplace_vector\<T, Capacity>
+- inplace_string\<Capacity>
+- inplace_set\<T, Capacity, Compare>
+- inplace_map\<Key, Value, Capacity, Compare>
+- inplace_unordered_set\<T, Capacity, Hash, Equals>
+- inplace_unordered_map\<Key, T, Capacity, Hash, Equals>
 - pair\<T, U>
 - tuple\<Ts...>
 - bitset\<Size>
