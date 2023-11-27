@@ -85,6 +85,7 @@ add_executable(${PROJECT_NAME}
         test_hash.cpp
         test_named_bitset.cpp
         test_pair.cpp
+        test_structural_constant.cpp
         test_tuple.cpp
         test_uninitialized_array.cpp
 )

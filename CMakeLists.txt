@@ -79,6 +79,7 @@ add_library(${PROJECT_NAME}
         include/structural/inplace_vector.hpp
         include/structural/named_bitset.hpp
         include/structural/pair.hpp
+        include/structural/structural_constant.hpp
         include/structural/tuple.hpp
         include/structural/uninitialized_array.hpp
 )
