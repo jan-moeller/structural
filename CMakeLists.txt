@@ -60,25 +60,25 @@ add_library(${PROJECT_NAME}
         include/structural/basic_inplace_string.hpp
         include/structural/bitset.hpp
         include/structural/detail/hash_combine.hpp
-        include/structural/detail/split.hpp
-        include/structural/detail/static_for.hpp
         include/structural/detail/inplace_hash_table.hpp
         include/structural/detail/inplace_red_black_tree.hpp
         include/structural/detail/inplace_unordered_map_details.hpp
+        include/structural/detail/split.hpp
+        include/structural/detail/static_for.hpp
         include/structural/detail/string_view_like.hpp
         include/structural/detail/to_underlying.hpp
         include/structural/detail/trim.hpp
         include/structural/detail/tuple_impl.hpp
         include/structural/detail/uninitialized_array_details.hpp
         include/structural/hash.hpp
-        include/structural/named_bitset.hpp
-        include/structural/pair.hpp
         include/structural/inplace_map.hpp
         include/structural/inplace_set.hpp
         include/structural/inplace_string.hpp
         include/structural/inplace_unordered_map.hpp
         include/structural/inplace_unordered_set.hpp
         include/structural/inplace_vector.hpp
+        include/structural/named_bitset.hpp
+        include/structural/pair.hpp
         include/structural/tuple.hpp
         include/structural/uninitialized_array.hpp
 )
