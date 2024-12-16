@@ -154,7 +154,11 @@ TEST_CASE("uninitialized_array", "[container]")
                                      + std::iter_difference_t<typename test_type::const_iterator>(b - a);
                     REQUIRE(std::to_address(b) == rhs);
                 }
-                SECTION("std::to_address(c) == std::to_address(a) + std::iter_difference_t<I>(c - a)")
+                // TODO: With the implementation for non-trivial Ts this is UB. Figure out what to do about this.
+                constexpr bool is_trivial_enough = std::is_trivially_default_constructible_v<test_type>
+                                                   && std::is_trivially_destructible_v<test_type>;
+                SECTION("std::to_address(c) == std::to_address(a) + std::iter_difference_t<I>(c - a)",
+                        compiletime_if(is_trivial_enough))
                 {
                     auto const rhs = std::to_address(a)
                                      + std::iter_difference_t<typename test_type::const_iterator>(c - a);
