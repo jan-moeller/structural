@@ -109,9 +109,9 @@ struct inplace_hash_table
 
     template<std::forward_iterator First, std::sentinel_for<First> Last>
     constexpr inplace_hash_table(First&&          first,
-                                Last&&           last,
-                                Hash const&      hash  = Hash(),
-                                key_equal const& equal = key_equal())
+                                 Last&&           last,
+                                 Hash const&      hash  = Hash(),
+                                 key_equal const& equal = key_equal())
         : inplace_hash_table(hash, equal)
     {
         for (auto iter = first; iter != last; ++iter)
@@ -125,9 +125,9 @@ struct inplace_hash_table
 
     constexpr inplace_hash_table(inplace_hash_table&& other)
         : inplace_hash_table(std::move(other).begin(),
-                            std::move(other).end(),
-                            std::move(other.hash_fn),
-                            std::move(other.equal_fn))
+                             std::move(other).end(),
+                             std::move(other.hash_fn),
+                             std::move(other.equal_fn))
     {
     }
 
@@ -356,19 +356,19 @@ struct inplace_hash_table_iterator
 
     constexpr inplace_hash_table_iterator(container_ptr container, size_type idx)
         : inplace_hash_table_iterator(container,
-                                     idx,
-                                     idx != s_invalid_idx ? container->buckets[idx].idx : s_invalid_idx){};
+                                      idx,
+                                      idx != s_invalid_idx ? container->buckets[idx].idx : s_invalid_idx) {};
 
     constexpr inplace_hash_table_iterator(container_ptr container, size_type idx, size_type node_idx)
         : container(container)
         , idx(idx)
-        , node_idx(node_idx){};
+        , node_idx(node_idx) {};
 
     constexpr inplace_hash_table_iterator(inplace_hash_table_iterator<T, Capacity, Hash, Equal, false> const& rhs)
         requires(Const)
         : container(rhs.container)
         , idx(rhs.idx)
-        , node_idx(rhs.node_idx){};
+        , node_idx(rhs.node_idx) {};
 
     constexpr inplace_hash_table_iterator(inplace_hash_table_iterator const&) = default;
 
