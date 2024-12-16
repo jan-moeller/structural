@@ -171,8 +171,9 @@ struct inplace_hash_table
     {
         CTRX_PRECONDITION(idx != s_invalid_idx);
         std::destroy_at(&nodes[idx].active);
-        nodes[idx].inactive = inactive_node_t{.next_free_idx = next_available_idx};
-        next_available_idx  = idx;
+        std::construct_at(&nodes[idx].inactive);
+        nodes[idx].inactive.next_free_idx = next_available_idx;
+        next_available_idx                = idx;
         --node_count;
     }
 
