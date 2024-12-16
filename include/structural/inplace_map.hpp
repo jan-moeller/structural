@@ -28,6 +28,7 @@
 #include "structural/detail/inplace_red_black_tree.hpp"
 
 #include <functional>
+#include <utility>
 
 namespace structural
 {
@@ -148,11 +149,11 @@ struct inplace_map
     {
         auto overwrite_fn = [o = std::forward<M>(obj)](value_type& v, Key const&)
         {
-            v.second = std::forward<decltype(o)>(o);
+            v.second = std::move(o);
         };
         auto allocate_fn = [&k, o = std::forward<M>(obj)](decltype(data)& t, Key const&)
         {
-            return t.allocate_node(value_type(k, std::forward<decltype(o)>(o)));
+            return t.allocate_node(value_type(k, std::move(o)));
         };
         bool preexisting = false;
         auto iter        = data.insert(k, &preexisting, overwrite_fn, allocate_fn);
@@ -163,11 +164,11 @@ struct inplace_map
     {
         auto overwrite_fn = [o = std::forward<M>(obj)](value_type& v, Key const&)
         {
-            v.second = std::forward<decltype(o)>(o);
+            v.second = std::move(o);
         };
         auto allocate_fn = [o = std::forward<M>(obj)](decltype(data)& t, Key&& k)
         {
-            return t.allocate_node(value_type(std::move(k), std::forward<decltype(o)>(o)));
+            return t.allocate_node(value_type(std::move(k), std::move(o)));
         };
         bool preexisting = false;
         auto iter        = data.insert(std::move(k), &preexisting, overwrite_fn, allocate_fn);
