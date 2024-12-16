@@ -43,7 +43,7 @@ TEST_CASE("uninitialized_array", "[container]")
 
     std::array<uninitialized_array<int, 3>, 5> some_data;
     some_data[0].construct_at(std::size_t{0}, 42);
-    std::tuple<std::array<uninitialized_array<int, 3>, 5>> some_tuple;
+    [[maybe_unused]] std::tuple<std::array<uninitialized_array<int, 3>, 5>> some_tuple;
 
     SECTION("structurality")
     {

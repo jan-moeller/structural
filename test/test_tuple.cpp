@@ -69,8 +69,8 @@ TEST_CASE("tuple")
     {
         SECTION("default")
         {
-            tuple<>            t1{};
-            tuple<int, double> t2{};
+            [[maybe_unused]] tuple<> t1{};
+            tuple<int, double>       t2{};
             REQUIRE(get<0>(t2) == int{});
             REQUIRE(get<1>(t2) == double{});
         }
