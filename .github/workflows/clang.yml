@@ -1,0 +1,45 @@
+name: clang
+
+on:
+  push:
+    branches: [ main, fix/*, feature/* ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        compiler:
+          - clang++-19
+        build_type: [ Debug, Release ]
+        include:
+          - runner: ubuntu-24.04
+            compiler: clang++-19
+            install: 19
+
+    runs-on: ${{matrix.runner}}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup environment
+        run: |
+          wget https://apt.llvm.org/llvm.sh
+          chmod +x llvm.sh
+          sudo ./llvm.sh ${{matrix.install}}
+
+      - name: Configure CMake
+        run: cmake -S test/ -B ${{github.workspace}}/build
+          -D CMAKE_BUILD_TYPE=${{matrix.build_type}}
+          -D BUGSPRAY_DONT_USE_STD_VECTOR=${{matrix.dont_use_std_vector}}
+          -D BUGSPRAY_DONT_USE_STD_STRING=${{matrix.dont_use_std_string}}
+          -D CMAKE_CXX_COMPILER=${{matrix.compiler}}
+
+      - name: Build
+        run: cmake --build ${{github.workspace}}/build --config ${{matrix.build_type}}
+
+      - name: Test
+        working-directory: ${{github.workspace}}/build
+        run: ctest -C ${{matrix.build_type}} --test-dir ${{github.workspace}}/build --output-on-failure
+
