@@ -8,8 +8,6 @@ on:
 
 jobs:
   build:
-    # 22.04 required for latest compiler versions
-    runs-on: ubuntu-22.04
     strategy:
       matrix:
         compiler:
@@ -19,26 +17,23 @@ jobs:
         build_type: [ Debug, Release ]
         include:
           # gcc-11 doesn't support constexpr vector and string, so there is no point in attempting to build with it
-          - compiler: g++-11
-            required_pkgs: g++-11
+          - runner: ubuntu-22.04
+            compiler: g++-11
             dont_use_std_vector: ON
             dont_use_std_string: ON
           # gcc-12's constexpr string implementation has bugs: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=105440
-          - compiler: g++-12
-            required_pkgs: g++-12
+          - runner: ubuntu-22.04
+            compiler: g++-12
             dont_use_std_string: ON
           # gcc-13's constexpr string implementation has bugs: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=105440
-          - compiler: g++-13
-            required_pkgs: g++-13
+          - runner: ubuntu-24.04
+            compiler: g++-13
             dont_use_std_string: ON
 
-    steps:
-      - uses: actions/checkout@v3
+    runs-on: ${{matrix.runner}}
 
-      - name: Setup environment
-        run: sudo add-apt-repository ppa:ubuntu-toolchain-r/ppa &&
-          sudo apt update &&
-          sudo apt-get install -y ${{matrix.required_pkgs}}
+    steps:
+      - uses: actions/checkout@v4
 
       - name: Configure CMake
         run: cmake -S test/ -B ${{github.workspace}}/build
