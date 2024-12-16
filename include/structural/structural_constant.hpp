@@ -28,9 +28,10 @@
 #include <concepts>
 #include <type_traits>
 
-#define STRUCTURAL_HAS_STATIC_CALL_OPERATOR (__cpp_static_call_operator >= 202207L)
-#define STRUCTURAL_HAS_STATIC_SUBSCRIPT_OPERATOR (__cpp_multidimensional_subscript >= 202111L)
-#define STRUCTURAL_HAS_MULTIDIM_SUBSCRIPT_OPERATOR (__cpp_multidimensional_subscript >= 202110L)
+#define STRUCTURAL_IS_CPP23 (__STDC_VERSION__ >= 202311L)
+#define STRUCTURAL_HAS_STATIC_CALL_OPERATOR (STRUCTURAL_IS_CPP23 && __cpp_static_call_operator >= 202207L)
+#define STRUCTURAL_HAS_STATIC_SUBSCRIPT_OPERATOR (STRUCTURAL_IS_CPP23 && __cpp_multidimensional_subscript >= 202111L)
+#define STRUCTURAL_HAS_MULTIDIM_SUBSCRIPT_OPERATOR (STRUCTURAL_IS_CPP23 && __cpp_multidimensional_subscript >= 202110L)
 
 #if STRUCTURAL_HAS_STATIC_CALL_OPERATOR
 #define STRUCTURAL_STATIC_CALL static
