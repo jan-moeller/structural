@@ -371,6 +371,8 @@ struct inplace_hash_table_iterator
 
     constexpr inplace_hash_table_iterator(inplace_hash_table_iterator const&) = default;
 
+    constexpr auto operator=(inplace_hash_table_iterator const&) -> inplace_hash_table_iterator& = default;
+
     constexpr auto operator*() const noexcept -> reference { return container->get_node(node_idx).payload; }
     constexpr auto operator->() const noexcept -> pointer { return &**this; }
 

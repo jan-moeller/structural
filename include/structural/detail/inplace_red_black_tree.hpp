@@ -588,6 +588,8 @@ struct inplace_red_black_tree_iterator
 
     constexpr inplace_red_black_tree_iterator(inplace_red_black_tree_iterator const&) = default;
 
+    constexpr auto operator=(inplace_red_black_tree_iterator const&) -> inplace_red_black_tree_iterator& = default;
+
     constexpr auto operator*() const noexcept -> reference { return container->get_node(idx).payload; }
     constexpr auto operator->() const noexcept -> pointer { return &**this; }
 

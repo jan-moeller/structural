@@ -70,6 +70,8 @@ struct iterator
     {
     }
 
+    constexpr auto operator=(iterator const&) -> iterator& = default;
+
     constexpr auto operator==(iterator const&) const -> bool = default;
     constexpr auto operator<=>(iterator const&) const        = default;
 
