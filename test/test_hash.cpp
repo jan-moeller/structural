@@ -46,8 +46,8 @@ TEST_CASE("hash", "[utility]")
     }
     SECTION("nullptr_t")
     {
-        hash<nullptr_t>{}(nullptr);
-        CHECK(structural_type<hash<nullptr_t>>);
+        hash<std::nullptr_t>{}(nullptr);
+        CHECK(structural_type<hash<std::nullptr_t>>);
     }
     SECTION("ptr", runtime)
     {
