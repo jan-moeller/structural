@@ -101,10 +101,17 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
             COMPILE_FLAGS -fconstexpr-ops-limit=2147483648
     )
 endif ()
+if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    set_target_properties(${PROJECT_NAME} PROPERTIES
+            COMPILE_FLAGS -fconstexpr-steps=2147483648
+    )
+endif ()
 
 # enable compiler warnings for main library target
-if (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
     target_compile_options(structural PUBLIC -Wall -Wpedantic -Wextra -Werror)
+elseif (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    target_compile_options(structural PUBLIC -Wall -Wpedantic -Wextra -Werror -Wno-self-assign-overloaded)
 elseif (MSVC)
     target_compile_options(structural PUBLIC /W4 /WX)
 endif ()
