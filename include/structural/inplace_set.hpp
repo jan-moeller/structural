@@ -137,7 +137,7 @@ struct inplace_set
     }
 
     template<typename K>
-    [[nodiscard]] constexpr auto contains(K const& value) noexcept -> bool
+    [[nodiscard]] constexpr auto contains(K const& value) const noexcept -> bool
     {
         return count(value) != 0;
     }
