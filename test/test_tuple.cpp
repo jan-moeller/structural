@@ -107,8 +107,23 @@ TEST_CASE("tuple")
         tuple<int, double> t{42, 3.141};
         REQUIRE(get<0>(t) == 42);
         REQUIRE(get<1>(t) == 3.141);
-        REQUIRE(get<int>(t) == get<0>(t));
-        REQUIRE(get<double>(t) == get<1>(t));
+        REQUIRE(get<int>(t) == 42);
+        REQUIRE(get<double>(t) == 3.141);
+
+        REQUIRE(get<0>(static_cast<tuple<int, double> const&>(t)) == 42);
+        REQUIRE(get<1>(static_cast<tuple<int, double> const&>(t)) == 3.141);
+        REQUIRE(get<int>(static_cast<tuple<int, double> const&>(t)) == 42);
+        REQUIRE(get<double>(static_cast<tuple<int, double> const&>(t)) == 3.141);
+
+        REQUIRE(get<0>((tuple{42, 3.141})) == 42);
+        REQUIRE(get<1>((tuple{42, 3.141})) == 3.141);
+        REQUIRE(get<int>((tuple{42, 3.141})) == 42);
+        REQUIRE(get<double>((tuple{42, 3.141})) == 3.141);
+
+        REQUIRE(get<0>(static_cast<tuple<int, double> const&&>(tuple{42, 3.141})) == 42);
+        REQUIRE(get<1>(static_cast<tuple<int, double> const&&>(tuple{42, 3.141})) == 3.141);
+        REQUIRE(get<int>(static_cast<tuple<int, double> const&&>(tuple{42, 3.141})) == 42);
+        REQUIRE(get<double>(static_cast<tuple<int, double> const&&>(tuple{42, 3.141})) == 3.141);
     }
     SECTION("operator==")
     {

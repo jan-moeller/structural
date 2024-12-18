@@ -160,13 +160,13 @@ constexpr auto get(tuple_member<I, T>& tuple) -> T&
 template<typename T, std::size_t I>
 constexpr auto get(tuple_member<I, T> const&& tuple) -> T const&&
 {
-    return std::move(tuple.value);
+    return std::forward<T const>(std::move(tuple).value);
 }
 
 template<typename T, std::size_t I>
 constexpr auto get(tuple_member<I, T>&& tuple) -> T&&
 {
-    return std::move(tuple.value);
+    return std::forward<T>(std::move(tuple).value);
 }
 
 template<std::size_t I, typename T>
@@ -184,13 +184,13 @@ constexpr auto get(tuple_member<I, T>& tuple) -> T&
 template<std::size_t I, typename T>
 constexpr auto get(tuple_member<I, T> const&& tuple) -> T const&&
 {
-    return std::move(tuple.value);
+    return std::forward<T const>(std::move(tuple).value);
 }
 
 template<std::size_t I, typename T>
 constexpr auto get(tuple_member<I, T>&& tuple) -> T&&
 {
-    return std::move(tuple.value);
+    return std::forward<T>(std::move(tuple).value);
 }
 
 template<std::size_t I, typename T>
