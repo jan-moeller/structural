@@ -202,9 +202,18 @@ TEST_CASE("tuple")
     }
     SECTION("forward_as_tuple")
     {
-        int const i = 3;
-        auto      t = forward_as_tuple(i);
-        REQUIRE(get<0>(t) == i);
+        SECTION("lvalue input")
+        {
+            int const i = 3;
+            auto      t = forward_as_tuple(i);
+            REQUIRE(get<0>(t) == i);
+            REQUIRE(std::same_as<decltype(t), tuple<const int&>>);
+        }
+        SECTION("rvalue input")
+        {
+            REQUIRE(get<0>(forward_as_tuple(3)) == 3);
+            REQUIRE(std::same_as<decltype(forward_as_tuple(3)), tuple<int&&>>);
+        }
     }
 }
 EVAL_TEST_CASE("tuple");
