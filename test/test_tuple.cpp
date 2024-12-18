@@ -215,5 +215,29 @@ TEST_CASE("tuple")
             REQUIRE(std::same_as<decltype(forward_as_tuple(3)), tuple<int&&>>);
         }
     }
+    SECTION("tuple_cat")
+    {
+        SECTION("implementation details")
+        {
+            SECTION("tuple_cat_inner_indices", compiletime)
+            {
+                auto inner = detail::tuple_cat_inner_indices<tuple<int, float>, tuple<char>, tuple<float, unsigned>>();
+                CHECK(inner == std::array<std::size_t, 5>{0, 0, 1, 2, 2});
+            }
+            SECTION("tuple_cat_outer_indices", compiletime)
+            {
+                auto inner = detail::tuple_cat_outer_indices<tuple<int, float>, tuple<char>, tuple<float, unsigned>>();
+                CHECK(inner == std::array<std::size_t, 5>{0, 1, 0, 0, 1});
+            }
+        }
+
+        tuple       a(1, 23.5f);
+        tuple       b('a');
+        tuple const c(1.23f, 42u);
+
+        CHECK(tuple_cat(a, b, c) == tuple(1, 23.5, 'a', 1.23f, 42u));
+        CHECK(tuple_cat(a, tuple(&a, true), c) == tuple(1, 23.5, &a, true, 1.23f, 42u));
+        CHECK(tuple_cat(a, a) == tuple(1, 23.5, 1, 23.5f));
+    }
 }
 EVAL_TEST_CASE("tuple");

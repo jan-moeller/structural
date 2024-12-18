@@ -27,6 +27,7 @@
 
 #include "structural/detail/tuple_impl.hpp"
 
+#include <array>
 #include <tuple>
 #include <type_traits>
 
@@ -34,6 +35,83 @@ namespace structural
 {
 template<typename... Ts>
 using tuple = detail::tuple_impl<std::make_index_sequence<sizeof...(Ts)>, Ts...>;
+
+namespace detail
+{
+template<typename... Tuples>
+struct tuple_cat_t;
+
+template<typename... Ts, typename... Us, typename... Tuples>
+struct tuple_cat_t<tuple<Ts...>, tuple<Us...>, Tuples...>
+{
+    using type = typename tuple_cat_t<tuple<Ts..., Us...>, Tuples...>::type;
+};
+template<typename... Ts, typename... Us>
+struct tuple_cat_t<tuple<Ts...>, tuple<Us...>>
+{
+    using type = tuple<Ts..., Us...>;
+};
+template<typename... Ts>
+struct tuple_cat_t<tuple<Ts...>>
+{
+    using type = tuple<Ts...>;
+};
+
+template<typename... Tuples>
+inline constexpr auto tuple_sizes = std::array{std::tuple_size_v<std::remove_cvref_t<Tuples>>...};
+
+template<typename... Tuples>
+consteval auto tuple_cat_inner_indices()
+{
+    return []<std::size_t... is>(std::index_sequence<is...>) constexpr
+    {
+        std::size_t idx = 0;
+        std::size_t sum = 0;
+        auto        l   = [&]([[maybe_unused]] std::size_t)
+        {
+            if (tuple_sizes<Tuples...>[idx] == sum)
+            {
+                ++idx;
+                sum = 0;
+            }
+            ++sum;
+            return idx;
+        };
+        return std::array{l(is)...};
+    }(std::make_index_sequence<(std::tuple_size_v<std::remove_cvref_t<Tuples>> + ...)>{});
+}
+
+template<typename... Tuples>
+consteval auto tuple_cat_outer_indices()
+{
+    return []<std::size_t... is>(std::index_sequence<is...>) constexpr
+    {
+        std::size_t idx = 0;
+        std::size_t sum = 0;
+        auto        l   = [&]([[maybe_unused]] std::size_t)
+        {
+            if (tuple_sizes<Tuples...>[idx] == sum)
+            {
+                ++idx;
+                sum = 0;
+            }
+            ++sum;
+            return sum - 1;
+        };
+        return std::array{l(is)...};
+    }(std::make_index_sequence<(std::tuple_size_v<std::remove_cvref_t<Tuples>> + ...)>{});
+}
+
+template<std::array Indices>
+consteval auto tuple_cat_make_integral_constants()
+{
+    return []<std::size_t... is>(std::index_sequence<is...>) constexpr
+    {
+        return tuple{std::integral_constant<std::size_t, Indices[is]>{}...};
+    }(std::make_index_sequence<Indices.size()>{});
+}
+
+} // namespace detail
 
 template<std::size_t I, class... Types>
 constexpr auto get(tuple<Types...>& t) noexcept -> std::tuple_element_t<I, tuple<Types...>>&
@@ -93,6 +171,22 @@ template<typename... Types>
 constexpr auto forward_as_tuple(Types&&... args) noexcept -> decltype(auto)
 {
     return tuple<Types&&...>(std::forward<Types>(args)...);
+}
+
+template<typename... Tuples>
+constexpr auto tuple_cat(Tuples&&... args) -> typename detail::tuple_cat_t<std::remove_cvref_t<Tuples>...>::type
+{
+    using Ret = typename detail::tuple_cat_t<std::remove_cvref_t<Tuples>...>::type;
+
+    constexpr auto inner_indices = detail::tuple_cat_inner_indices<Tuples...>();
+    constexpr auto outer_indices = detail::tuple_cat_outer_indices<Tuples...>();
+
+    return []<typename... Is, typename... Js, typename TT>(tuple<Is...>, tuple<Js...>, TT&& tuples) -> Ret
+    {
+        return Ret{structural::get<Js::value>(structural::get<Is::value>(std::forward<TT>(tuples)))...};
+    }(detail::tuple_cat_make_integral_constants<inner_indices>(),
+      detail::tuple_cat_make_integral_constants<outer_indices>(),
+      structural::forward_as_tuple(std::forward<Tuples>(args)...));
 }
 } // namespace structural
 
