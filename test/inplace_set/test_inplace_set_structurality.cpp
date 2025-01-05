@@ -21,7 +21,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
-#include "../concept_structural_type_value.hpp"
+#include "structural/concept_structural_type_value.hpp"
 #include "structural/inplace_set.hpp"
 
 #include <bugspray/bugspray.hpp>

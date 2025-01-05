@@ -59,6 +59,7 @@ message(STATUS "Build type:                ${CMAKE_BUILD_TYPE}")
 add_library(${PROJECT_NAME}
         include/structural/basic_inplace_string.hpp
         include/structural/bitset.hpp
+        include/structural/concept_structural_type_value.hpp
         include/structural/detail/hash_combine.hpp
         include/structural/detail/inplace_hash_table.hpp
         include/structural/detail/inplace_red_black_tree.hpp

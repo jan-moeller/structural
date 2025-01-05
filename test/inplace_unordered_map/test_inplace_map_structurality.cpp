@@ -21,7 +21,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
-#include "../concept_structural_type_value.hpp"
+#include "structural/concept_structural_type_value.hpp"
 #include "structural/inplace_unordered_map.hpp"
 
 #include <bugspray/bugspray.hpp>
@@ -34,8 +34,7 @@ TEST_CASE("inplace_unordered_map - structurality", "[container]")
     CHECK(structural_type<inplace_unordered_map<int, int, C>>);
     CHECK(structural_type<inplace_unordered_map<inplace_unordered_map<int, int, C>, int, C>>);
     CHECK(structural_type<inplace_unordered_map<int, inplace_unordered_map<int, int, C>, C>>);
-    CHECK(
-        structural_type<
+    CHECK(structural_type<
           inplace_unordered_map<inplace_unordered_map<int, int, C>, inplace_unordered_map<int, int, C>, C>>);
     CHECK(!structural_type<inplace_unordered_map<std::string, int, C>>);
     CHECK(!structural_type<inplace_unordered_map<inplace_unordered_map<std::string, int, C>, int, C>>);
