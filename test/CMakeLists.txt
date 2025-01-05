@@ -30,7 +30,7 @@ project(structural-tests LANGUAGES CXX)
 include(../cmake/CPM.cmake)
 
 CPMAddPackage(NAME structural SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/..)
-CPMAddPackage("gh:jan-moeller/bugspray@0.3.0")
+CPMAddPackage("gh:jan-moeller/bugspray@0.4.1")
 
 #############################################################################################################
 # Unit test target
