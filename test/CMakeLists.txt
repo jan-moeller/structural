@@ -44,7 +44,6 @@ add_executable(${PROJECT_NAME}
         basic_inplace_string/test_basic_inplace_string_read_access.cpp
         basic_inplace_string/test_basic_inplace_string_structurality.cpp
         basic_inplace_string/test_basic_inplace_string_write_access.cpp
-        concept_structural_type_value.hpp
         inplace_map/test_inplace_map_assignment.cpp
         inplace_map/test_inplace_map_constructor.cpp
         inplace_map/test_inplace_map_emplace.cpp

@@ -22,8 +22,8 @@
 // SOFTWARE.
 //
 
-#include "concept_structural_type_value.hpp"
 #include "structural/bitset.hpp"
+#include "structural/concept_structural_type_value.hpp"
 
 #include <bugspray/bugspray.hpp>
 
