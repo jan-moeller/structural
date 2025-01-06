@@ -80,6 +80,18 @@ add_library(${PROJECT_NAME}
         include/structural/inplace_vector.hpp
         include/structural/named_bitset.hpp
         include/structural/pair.hpp
+        include/structural/serialization/serialize_aggregate.hpp
+        include/structural/serialization/serialize_arithmetic.hpp
+        include/structural/serialization/serialize_chrono.hpp
+        include/structural/serialization/serialize_enum.hpp
+        include/structural/serialization/serialize_expected.hpp
+        include/structural/serialization/serialize_optional.hpp
+        include/structural/serialization/serialize_range.hpp
+        include/structural/serialization/serialize_tuple_like.hpp
+        include/structural/serialization/serialize_unique_ptr.hpp
+        include/structural/serialization/serialize_variant.hpp
+        include/structural/serialization/serializer.hpp
+        include/structural/serialization.hpp
         include/structural/structural_constant.hpp
         include/structural/tuple.hpp
         include/structural/uninitialized_array.hpp
