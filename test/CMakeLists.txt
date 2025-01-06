@@ -91,6 +91,11 @@ add_executable(${PROJECT_NAME}
         serialization/test_serialize_tuple_like.cpp
         serialization/test_serialize_unique_ptr.cpp
         serialization/test_serialize_variant.cpp
+        structuralization/test_structuralize_optional.cpp
+        structuralization/test_structuralize_range.cpp
+        structuralization/test_structuralize_tuple_like.cpp
+        structuralization/test_structuralize_unique_ptr.cpp
+        structuralization/test_structuralize_variant.cpp
         test_bitset.cpp
         test_hash.cpp
         test_named_bitset.cpp
