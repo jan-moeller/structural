@@ -11,17 +11,11 @@ jobs:
     strategy:
       matrix:
         compiler:
-          - g++-11
           - g++-12
           - g++-13
           - g++-14
         build_type: [ Debug, Release ]
         include:
-          # gcc-11 doesn't support constexpr vector and string, so there is no point in attempting to build with it
-          - runner: ubuntu-22.04
-            compiler: g++-11
-            dont_use_std_vector: ON
-            dont_use_std_string: ON
           # gcc-12's constexpr string implementation has bugs: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=105440
           - runner: ubuntu-22.04
             compiler: g++-12
