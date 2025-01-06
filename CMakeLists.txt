@@ -95,6 +95,7 @@ add_library(${PROJECT_NAME}
         include/structural/structural_constant.hpp
         include/structural/tuple.hpp
         include/structural/uninitialized_array.hpp
+        include/structural/wrapper.hpp
 )
 target_include_directories(
         ${PROJECT_NAME} PUBLIC

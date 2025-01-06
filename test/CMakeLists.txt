@@ -98,6 +98,7 @@ add_executable(${PROJECT_NAME}
         test_structural_constant.cpp
         test_tuple.cpp
         test_uninitialized_array.cpp
+        test_wrapper.cpp
 )
 target_link_libraries(${PROJECT_NAME} PUBLIC bugspray-with-main structural::structural)
 set_target_properties(${PROJECT_NAME} PROPERTIES
