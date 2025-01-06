@@ -80,6 +80,17 @@ add_executable(${PROJECT_NAME}
         inplace_vector/test_inplace_vector_read_access.cpp
         inplace_vector/test_inplace_vector_structurality.cpp
         inplace_vector/test_inplace_vector_write_access.cpp
+        serialization/serialize_helper.hpp
+        serialization/test_serialize_aggregate.cpp
+        serialization/test_serialize_arithmetic.cpp
+        serialization/test_serialize_chrono.cpp
+        serialization/test_serialize_enum.cpp
+        serialization/test_serialize_expected.cpp
+        serialization/test_serialize_optional.cpp
+        serialization/test_serialize_range.cpp
+        serialization/test_serialize_tuple_like.cpp
+        serialization/test_serialize_unique_ptr.cpp
+        serialization/test_serialize_variant.cpp
         test_bitset.cpp
         test_hash.cpp
         test_named_bitset.cpp
