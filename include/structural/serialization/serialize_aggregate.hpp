@@ -40,7 +40,7 @@ namespace detail
 struct anything
 {
     template<class T>
-    constexpr /* implicit */ operator T();
+    /* implicit */ operator T() const;
 };
 
 template<typename T, typename... Ts>
