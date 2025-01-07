@@ -53,10 +53,17 @@ TEST_CASE("serialize - aggregate", "[utility]")
         char           c                                      = 'c';
         constexpr auto operator==(foo_5 const&) const -> bool = default;
     };
+    struct foo_nonliteral
+    {
+        int                  a;
+        std::optional<float> b;
+        constexpr auto       operator==(foo_nonliteral const&) const -> bool = default;
+    };
 
     CHECK(deserialize<foo_0>(serialize(foo_0{})) == foo_0{});
     CHECK(deserialize<foo_1>(serialize(foo_1{42})) == foo_1{42});
     CHECK(deserialize<foo_2>(serialize(foo_2{42, 0.1f})) == foo_2{42, 0.1f});
     CHECK(deserialize<foo_5>(serialize(foo_5{42, 0.1f, true, 5.43, 'a'})) == foo_5{42, 0.1f, true, 5.43, 'a'});
+    CHECK(deserialize<foo_nonliteral>(serialize(foo_nonliteral{42, std::nullopt})) == foo_nonliteral{42, std::nullopt});
 }
 EVAL_TEST_CASE("serialize - aggregate");
