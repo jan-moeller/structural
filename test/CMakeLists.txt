@@ -91,6 +91,7 @@ add_executable(${PROJECT_NAME}
         serialization/test_serialize_tuple_like.cpp
         serialization/test_serialize_unique_ptr.cpp
         serialization/test_serialize_variant.cpp
+        structuralization/test_structuralize_aggregate.cpp
         structuralization/test_structuralize_optional.cpp
         structuralization/test_structuralize_range.cpp
         structuralization/test_structuralize_tuple_like.cpp

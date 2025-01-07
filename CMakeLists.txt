@@ -93,6 +93,7 @@ add_library(${PROJECT_NAME}
         include/structural/serialization/serializer.hpp
         include/structural/serialization.hpp
         include/structural/structural_constant.hpp
+        include/structural/structuralization/structuralize_aggregate.hpp
         include/structural/structuralization/structuralize_optional.hpp
         include/structural/structuralization/structuralize_range.hpp
         include/structural/structuralization/structuralize_structural.hpp
