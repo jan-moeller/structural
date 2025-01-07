@@ -44,27 +44,27 @@ struct anything
 };
 
 template<typename T, typename... Ts>
-concept brace_constructible = requires(Ts... ts) { T{ts...}; };
+concept direct_list_initializable = requires(Ts... ts) { T{ts...}; };
 
 template<typename T, std::size_t N, typename = std::make_index_sequence<N>>
-struct is_aggregate_of_size;
+struct is_direct_list_initializable_n;
 
 template<typename T, std::size_t N, std::size_t... Is>
-struct is_aggregate_of_size<T, N, std::index_sequence<Is...>>
+struct is_direct_list_initializable_n<T, N, std::index_sequence<Is...>>
 {
     template<std::size_t>
     using type = anything;
 
-    static constexpr bool value = brace_constructible<T, type<Is>...>;
+    static constexpr bool value = direct_list_initializable<T, type<Is>...>;
 };
 template<typename T, std::size_t N>
-inline constexpr bool is_aggregate_of_size_v = is_aggregate_of_size<T, N>::value;
+inline constexpr bool is_direct_list_initializable_n_v = is_direct_list_initializable_n<T, N>::value;
 
 template<typename T>
 constexpr auto to_tuple(T&& value)
 {
     using type = std::decay_t<T>;
-    static_assert(!is_aggregate_of_size_v<type, 11>,
+    static_assert(!is_direct_list_initializable_n_v<type, 11>,
                   "Aggregates supported up to size 10 - please provide custom serializer for this type.");
 
 #define STRUCTURAL_GEN_ID_1 p1
@@ -80,7 +80,7 @@ constexpr auto to_tuple(T&& value)
 #define STRUCTURAL_GEN_ID(N) STRUCTURAL_GEN_ID_##N
 
 #define STRUCTURAL_GEN_CASE(N, ...)                                                                                    \
-    __VA_ARGS__ if constexpr (is_aggregate_of_size_v<type, N>)                                                         \
+    __VA_ARGS__ if constexpr (is_direct_list_initializable_n_v<type, N>)                                               \
     {                                                                                                                  \
         auto&& [STRUCTURAL_GEN_ID(N)] = std::forward<T>(value);                                                        \
         return std::tuple{STRUCTURAL_GEN_ID(N)};                                                                       \
@@ -95,7 +95,7 @@ constexpr auto to_tuple(T&& value)
     STRUCTURAL_GEN_CASE(3, else)
     STRUCTURAL_GEN_CASE(2, else)
     STRUCTURAL_GEN_CASE(1, else)
-    else if constexpr (is_aggregate_of_size_v<type, 0>)
+    else if constexpr (is_direct_list_initializable_n_v<type, 0>)
     {
         return std::tuple{};
     }
