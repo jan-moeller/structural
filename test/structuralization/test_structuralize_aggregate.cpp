@@ -22,15 +22,33 @@
 // SOFTWARE.
 //
 
-#ifndef STRUCTURALIZE_HPP
-#define STRUCTURALIZE_HPP
+#include "structural/structuralize.hpp"
 
-#include "structural/structuralization/structuralize_aggregate.hpp"
-#include "structural/structuralization/structuralize_optional.hpp"
-#include "structural/structuralization/structuralize_range.hpp"
-#include "structural/structuralization/structuralize_structural.hpp"
-#include "structural/structuralization/structuralize_tuple_like.hpp"
-#include "structural/structuralization/structuralize_unique_ptr.hpp"
-#include "structural/structuralization/structuralize_variant.hpp"
+#include <bugspray/bugspray.hpp>
 
-#endif // STRUCTURALIZE_HPP
+TEST_CASE("structuralize - aggregate", "[utility]")
+{
+    using namespace structural;
+
+    struct A1
+    {
+        int   a;
+        float b;
+
+        constexpr auto operator==(A1 const&) const -> bool = default;
+    };
+    struct A2
+    {
+        int                  a;
+        std::optional<float> b;
+
+        constexpr auto operator==(A2 const&) const -> bool = default;
+    };
+
+    constexpr auto val1 = STRUCTURALIZE(A1{42, 3.14f});
+    constexpr auto val2 = STRUCTURALIZE(A2{42, std::nullopt});
+
+    CHECK(val1 == A1{42, 3.14f});
+    CHECK(val2 == tuple{42, std::nullopt});
+}
+EVAL_TEST_CASE("structuralize - aggregate");

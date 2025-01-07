@@ -22,15 +22,19 @@
 // SOFTWARE.
 //
 
-#ifndef STRUCTURALIZE_HPP
-#define STRUCTURALIZE_HPP
+#ifndef STRUCTURALIZE_AGGREGATE_HPP
+#define STRUCTURALIZE_AGGREGATE_HPP
 
-#include "structural/structuralization/structuralize_aggregate.hpp"
-#include "structural/structuralization/structuralize_optional.hpp"
-#include "structural/structuralization/structuralize_range.hpp"
-#include "structural/structuralization/structuralize_structural.hpp"
-#include "structural/structuralization/structuralize_tuple_like.hpp"
-#include "structural/structuralization/structuralize_unique_ptr.hpp"
-#include "structural/structuralization/structuralize_variant.hpp"
+#include "structural/structuralization/structuralizer.hpp"
 
-#endif // STRUCTURALIZE_HPP
+namespace structural
+{
+template<decomposable_aggregate T, wrapper WrappedValue>
+    requires(!structural_type<T>)
+struct structuralizer<T, WrappedValue>
+{
+    static consteval auto do_structuralize() { return STRUCTURALIZE(detail::to_tuple(WrappedValue.unwrap())); }
+};
+} // namespace structural
+
+#endif // STRUCTURALIZE_AGGREGATE_HPP
